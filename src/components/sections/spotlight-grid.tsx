@@ -24,7 +24,7 @@ function photoSrcForIndex(index: number) {
 
 export function SpotlightGrid() {
   return (
-    <section className="px-4 pt-8 text-center lg:px-8">
+    <section className="px-4 py-8 text-center lg:px-8">
       <h2 className="font-display text-xl font-bold text-onyx">รายการที่รับซื้อ</h2>
       <p className="mx-auto mt-2 max-w-md text-sm text-onyx/70">
         พระเครื่อง วัตถุมงคล ของเก่าของโบราณ และของสะสมทุกชนิด

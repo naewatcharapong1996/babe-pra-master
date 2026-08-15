@@ -1,4 +1,4 @@
-import { ChevronDownIcon, FacebookIcon } from "./icons";
+import { ChevronDownIcon, FacebookIcon, InstagramIcon } from "./icons";
 import { LineButton } from "./line-modal";
 import { Logo } from "./logo";
 import { siteConfig } from "@/lib/site-config";
@@ -34,6 +34,31 @@ function FooterLink({ href, label }: { href: string; label: string }) {
   );
 }
 
+function SocialLinks({ className }: { className?: string }) {
+  return (
+    <div className={className}>
+      <a
+        href={siteConfig.social.facebook}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={siteConfig.social.facebookName}
+        className="flex h-9 w-9 items-center justify-center rounded-full border border-bone/20 text-bone/70 hover:text-gold"
+      >
+        <FacebookIcon className="h-4 w-4" />
+      </a>
+      <a
+        href={siteConfig.social.instagram}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Instagram"
+        className="flex h-9 w-9 items-center justify-center rounded-full border border-bone/20 text-bone/70 hover:text-gold"
+      >
+        <InstagramIcon className="h-4 w-4" />
+      </a>
+    </div>
+  );
+}
+
 export function SiteFooter() {
   return (
     <footer className="mt-8 border-t border-bone/10 bg-onyx pb-6 pt-8">
@@ -59,6 +84,7 @@ export function SiteFooter() {
             </div>
           </details>
         ))}
+        <SocialLinks className="flex items-center gap-3 py-3" />
       </div>
 
       {/* Desktop: expanded columns */}
@@ -73,26 +99,7 @@ export function SiteFooter() {
             </div>
           </div>
         ))}
-        <div className="flex items-start justify-end gap-3">
-          <a
-            href={siteConfig.social.facebook}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label={siteConfig.social.facebookName}
-            className="flex h-9 w-9 items-center justify-center rounded-full border border-bone/20 text-bone/70 hover:text-gold"
-          >
-            <FacebookIcon className="h-4 w-4" />
-          </a>
-          <a
-            href={siteConfig.social.instagram}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Instagram"
-            className="flex h-9 w-9 items-center justify-center rounded-full border border-bone/20 text-bone/70 hover:text-gold"
-          >
-            IG
-          </a>
-        </div>
+        <SocialLinks className="flex items-start justify-end gap-3" />
       </div>
 
       <div className="mt-6 flex flex-wrap items-center justify-between gap-2 border-t border-bone/10 px-4 pt-4 text-[11px] text-taupe lg:px-8">

@@ -125,23 +125,6 @@ export function CheckIcon({ className }: IconProps) {
   );
 }
 
-export function QrIcon({ className }: IconProps) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
-      <rect x="3.5" y="3.5" width="6" height="6" rx="0.6" stroke="currentColor" strokeWidth="1.5" />
-      <rect x="14.5" y="3.5" width="6" height="6" rx="0.6" stroke="currentColor" strokeWidth="1.5" />
-      <rect x="3.5" y="14.5" width="6" height="6" rx="0.6" stroke="currentColor" strokeWidth="1.5" />
-      <path
-        d="M14.5 14.5h2.2v2.2h-2.2zM18.8 14.5H21M14.5 18.8h2.2M18.8 18.8H21v2.2h-2.2v-2.2z"
-        stroke="currentColor"
-        strokeWidth="1.3"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
 export function LineIcon({ className }: IconProps) {
   return (
     <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
@@ -170,6 +153,16 @@ export function FacebookIcon({ className }: IconProps) {
   );
 }
 
+export function InstagramIcon({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
+      <rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" strokeWidth="1.5" />
+      <circle cx="12" cy="12" r="4" stroke="currentColor" strokeWidth="1.5" />
+      <circle cx="17.2" cy="6.8" r="1" fill="currentColor" />
+    </svg>
+  );
+}
+
 export function PhoneIcon({ className }: IconProps) {
   return (
     <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
@@ -184,16 +177,19 @@ export function PhoneIcon({ className }: IconProps) {
   );
 }
 
-export function AmuletMarkIcon({ className }: IconProps) {
+export function PauseIcon({ className }: IconProps) {
   return (
-    <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
-      <path
-        d="M12 2.2c3 2 5 5.4 5 9 0 3.8-2.2 7.4-5 10.6-2.8-3.2-5-6.8-5-10.6 0-3.6 2-7 5-9z"
-        stroke="currentColor"
-        strokeWidth="1.4"
-        strokeLinejoin="round"
-      />
-      <circle cx="12" cy="10.6" r="2.6" stroke="currentColor" strokeWidth="1.4" />
+    <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">
+      <rect x="6" y="5" width="4" height="14" rx="1" />
+      <rect x="14" y="5" width="4" height="14" rx="1" />
+    </svg>
+  );
+}
+
+export function PlayIcon({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">
+      <path d="M7.5 5.4v13.2c0 .8.9 1.3 1.6.9l10.8-6.6c.7-.4.7-1.4 0-1.8L9.1 4.5c-.7-.4-1.6.1-1.6.9z" />
     </svg>
   );
 }

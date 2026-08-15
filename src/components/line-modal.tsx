@@ -38,11 +38,12 @@ export function LineButton({
   className,
   children,
   onClick,
+  ...rest
 }: {
   className?: string;
   children: React.ReactNode;
   onClick?: () => void;
-}) {
+} & Omit<React.ComponentPropsWithoutRef<"a">, "href" | "className" | "children" | "onClick">) {
   const { openModal } = useLineModalContext();
   const isDesktop = useMediaQuery("(min-width: 1024px)");
 
@@ -55,7 +56,7 @@ export function LineButton({
   }
 
   return (
-    <a href={siteConfig.lineUrl} onClick={handleClick} className={className}>
+    <a href={siteConfig.lineUrl} onClick={handleClick} className={className} {...rest}>
       {children}
     </a>
   );

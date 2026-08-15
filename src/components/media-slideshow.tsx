@@ -11,17 +11,21 @@ const IMAGE_DWELL_MS = 5000;
  * visible controls (this is background/supporting media, not a primary
  * navigable carousel like the hero).
  *
- * - mode="alternate" (default): plays the video once, then holds on the
- *   image for a few seconds, then loops back to the video.
+ * - mode="alternate" (default): holds on the image first, then plays the
+ *   video once, then back to the image, cycling indefinitely.
  * - mode="loop": the video loops continuously on its own; the image is only
  *   ever shown if the video fails to load/decode.
  *
  * Reduced-motion always shows the static image only, in both modes.
  *
- * Playback is gated on scroll visibility (IntersectionObserver) so that
- * off-screen instances don't all autoplay at once on page load — each one
- * only starts once it actually scrolls into view, and pauses when it
- * scrolls back out.
+ * Playback is gated on scroll visibility with two IntersectionObserver
+ * thresholds so off-screen instances don't all autoplay (or download) at
+ * once on page load:
+ * - "primed" fires ~600px before the section reaches the viewport — the
+ *   video starts buffering (preload="auto") ahead of time so there's no
+ *   loading flash by the time it's actually seen.
+ * - "inView" fires once the section is actually visible — only then does
+ *   playback start; it pauses again once scrolled back out.
  */
 export function MediaSlideshow({
   videoSrc,
@@ -37,9 +41,13 @@ export function MediaSlideshow({
   mode?: "alternate" | "loop";
 }) {
   const reducedMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
-  const [showingVideo, setShowingVideo] = useState(true);
+  // "loop" mode has no picture phase to start on (the image is only an
+  // error fallback), so it still starts on the video; "alternate" mode now
+  // starts on the image and cycles to video after the dwell timer below.
+  const [showingVideo, setShowingVideo] = useState(mode === "loop");
   const [videoFailed, setVideoFailed] = useState(false);
   const [cycle, setCycle] = useState(0);
+  const [primed, setPrimed] = useState(false);
   const [inView, setInView] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -47,12 +55,20 @@ export function MediaSlideshow({
   useEffect(() => {
     const node = containerRef.current;
     if (!node) return;
-    const observer = new IntersectionObserver(
+    const primeObserver = new IntersectionObserver(
+      ([entry]) => setPrimed(entry.isIntersecting),
+      { rootMargin: "600px 0px", threshold: 0 },
+    );
+    const playObserver = new IntersectionObserver(
       ([entry]) => setInView(entry.isIntersecting),
       { threshold: 0.35 },
     );
-    observer.observe(node);
-    return () => observer.disconnect();
+    primeObserver.observe(node);
+    playObserver.observe(node);
+    return () => {
+      primeObserver.disconnect();
+      playObserver.disconnect();
+    };
   }, []);
 
   useEffect(() => {
@@ -92,7 +108,7 @@ export function MediaSlideshow({
         className={`h-full w-full ${mediaClassName}`}
         muted
         playsInline
-        preload="none"
+        preload={primed ? "auto" : "none"}
         autoPlay={inView}
         loop={mode === "loop"}
         onEnded={mode === "alternate" ? () => setShowingVideo(false) : undefined}

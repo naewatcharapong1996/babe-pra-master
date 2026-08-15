@@ -25,8 +25,6 @@ export const siteConfig = {
     // TODO: replace with a real, live Instagram profile URL (or remove if unused).
     instagram: "https://instagram.com/babebangmod",
   },
-  // TODO: replace with a real, monitored contact address.
-  contactEmail: "hello@example.com",
 } as const;
 
 export type NavLink = { href: string; label: string };

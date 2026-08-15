@@ -2,9 +2,13 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { ChevronLeftIcon, ChevronRightIcon, LineIcon } from "../icons";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
+import { ChevronLeftIcon, ChevronRightIcon, LineIcon, PauseIcon, PlayIcon } from "../icons";
 import { LineButton } from "../line-modal";
 import { useMediaQuery } from "@/lib/use-media-query";
+
+gsap.registerPlugin(useGSAP);
 
 const IMAGE_DWELL_MS = 5000;
 // Shown in place of any video slide whose source fails to load/decode
@@ -89,6 +93,8 @@ const slides: Slide[] = [
 
 export function HeroCarousel() {
   const [index, setIndex] = useState(0);
+  // Autoplay only stops via the explicit pause button — no hover/focus
+  // auto-pause, so the carousel keeps running regardless of mouse position.
   const [paused, setPaused] = useState(false);
   // Browser-level capability, not per-slide: once one video source fails
   // (e.g. no WebM support), every other video slide would fail identically,
@@ -98,9 +104,27 @@ export function HeroCarousel() {
   const isDesktop = useMediaQuery("(min-width: 1024px)");
   const videoRef = useRef<HTMLVideoElement>(null);
   const bgVideoRef = useRef<HTMLVideoElement>(null);
+  const elapsedRef = useRef(0);
+  const [progress, setProgress] = useState(0);
+  const [prevIndexForProgress, setPrevIndexForProgress] = useState(index);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const mediaRef = useRef<HTMLDivElement>(null);
+
+  // Reset the progress ring's state at the start of render for the new
+  // slide, rather than in an effect (avoids a cascading-render
+  // setState-in-effect). The elapsedRef write itself still happens in an
+  // effect below — refs can't be written during render.
+  if (index !== prevIndexForProgress) {
+    setPrevIndexForProgress(index);
+    setProgress(0);
+  }
 
   function goToNext() {
     setIndex((i) => (i + 1) % slides.length);
+  }
+
+  function goToPrev() {
+    setIndex((i) => (i - 1 + slides.length) % slides.length);
   }
 
   function handleVideoError() {
@@ -132,121 +156,200 @@ export function HeroCarousel() {
     }
   }, [paused, reducedMotion, index]);
 
+  // Progress ring around the pause/play button: tracks elapsed time toward
+  // the next auto-advance. Image slides use the fixed dwell timer; playable
+  // video slides sync to the video's own currentTime/duration instead.
+  useEffect(() => {
+    elapsedRef.current = 0;
+  }, [index]);
+
+  useEffect(() => {
+    if (paused || reducedMotion) return;
+    const isPlayableVideo = slide.type === "video" && !showVideoFallback;
+    let raf: number;
+    let last = performance.now();
+    function tick(now: number) {
+      const video = videoRef.current;
+      if (isPlayableVideo && video && video.duration) {
+        setProgress(video.currentTime / video.duration);
+      } else {
+        elapsedRef.current += now - last;
+        setProgress(Math.min(elapsedRef.current / IMAGE_DWELL_MS, 1));
+      }
+      last = now;
+      raf = requestAnimationFrame(tick);
+    }
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [index, paused, reducedMotion, slide.type, showVideoFallback]);
+
+  const ringRadius = 17;
+  const ringCircumference = 2 * Math.PI * ringRadius;
+
+  // Staggered text/CTA entrance, re-triggered on every slide change.
+  // opacity + y only (compositor-friendly, per gsap-performance guidance) —
+  // no layout-affecting properties, so it stays cheap even on low-end phones.
+  useGSAP(
+    () => {
+      const targets = ["[data-hero-eyebrow]", "[data-hero-headline]", "[data-hero-sub]", "[data-hero-cta]"];
+      if (reducedMotion) {
+        gsap.set(targets, { opacity: 1, y: 0 });
+        return;
+      }
+      gsap
+        .timeline({ defaults: { ease: "power3.out", duration: 0.6 } })
+        .from("[data-hero-eyebrow]", { opacity: 0, y: 16 })
+        .from("[data-hero-headline]", { opacity: 0, y: 24 }, "-=0.4")
+        .from("[data-hero-sub]", { opacity: 0, y: 16 }, "-=0.4")
+        .from("[data-hero-cta]", { opacity: 0, y: 16 }, "-=0.35");
+    },
+    { scope: contentRef, dependencies: [index, reducedMotion] },
+  );
+
+  // Every slide swap remounts a fresh <video>/<img> (needed to force the new
+  // source to load from frame 0), which always needs at least one paint to
+  // decode a frame — there's no way to make that instant. A single fade-in
+  // on the whole media stack (not a fade-to-color-and-back pulse, which read
+  // as a double flash) softens that gap into one smooth reveal.
+  useGSAP(
+    () => {
+      if (!mediaRef.current) return;
+      if (reducedMotion) {
+        gsap.set(mediaRef.current, { opacity: 1 });
+        return;
+      }
+      gsap.fromTo(mediaRef.current, { opacity: 0 }, { opacity: 1, duration: 0.45, ease: "power1.out" });
+    },
+    { dependencies: [index, reducedMotion] },
+  );
+
   return (
     <section
       id="top"
       aria-roledescription="carousel"
       aria-label="แคมเปญเด่น"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-      onFocus={() => setPaused(true)}
-      onBlur={() => setPaused(false)}
       className="relative flex min-h-[100svh] flex-col justify-end overflow-hidden bg-onyx text-bone lg:min-h-0 lg:aspect-[21/9]"
     >
-      {/* Desktop only: blurred, dimmed full-bleed copy of the same media as
-          ambient background, so the real media below can be shown uncropped
-          at its true aspect ratio instead of being cover-cropped into a sliver. */}
-      {isDesktop &&
-        (slide.type === "video" && !showVideoFallback ? (
+      <div ref={mediaRef} className="absolute inset-0">
+        {/* Desktop only: blurred, dimmed full-bleed copy of the same media as
+            ambient background, so the real media below can be shown uncropped
+            at its true aspect ratio instead of being cover-cropped into a sliver. */}
+        {isDesktop &&
+          (slide.type === "video" && !showVideoFallback ? (
+            <video
+              key={`bg-${index}`}
+              ref={bgVideoRef}
+              aria-hidden="true"
+              className="absolute inset-0 h-full w-full scale-110 object-cover opacity-50 blur-2xl"
+              muted
+              loop
+              playsInline
+              preload="auto"
+              autoPlay={!paused && !reducedMotion}
+              onError={handleVideoError}
+            >
+              <source src={slide.src} type="video/webm" />
+            </video>
+          ) : (
+            <Image
+              key={`bg-${index}`}
+              src={showVideoFallback ? VIDEO_FALLBACK_SRC : slide.src}
+              alt=""
+              aria-hidden="true"
+              fill
+              sizes="100vw"
+              className="scale-110 object-cover opacity-50 blur-2xl"
+            />
+          ))}
+
+        {isDesktop ? (
+          <div className="absolute inset-0 flex items-start justify-center px-8 pb-32 pt-16 xl:px-16">
+            <div
+              className="relative h-full max-w-[85%] overflow-hidden rounded-3xl shadow-2xl ring-1 ring-bone/10"
+              style={{ aspectRatio: showVideoFallback ? VIDEO_FALLBACK_ASPECT : slide.aspect }}
+            >
+              {slide.type === "video" && !showVideoFallback ? (
+                <video
+                  key={index}
+                  ref={videoRef}
+                  className="absolute inset-0 h-full w-full object-cover"
+                  muted
+                  playsInline
+                  preload="auto"
+                  autoPlay={!paused && !reducedMotion}
+                  onEnded={goToNext}
+                  onError={handleVideoError}
+                >
+                  <source src={slide.src} type="video/webm" />
+                </video>
+              ) : (
+                <Image
+                  key={index}
+                  src={showVideoFallback ? VIDEO_FALLBACK_SRC : slide.src}
+                  alt={showVideoFallback ? slide.eyebrow : (slide.alt ?? "")}
+                  fill
+                  sizes="85vw"
+                  className="object-cover"
+                  priority={index === 0}
+                />
+              )}
+            </div>
+          </div>
+        ) : slide.type === "video" && !showVideoFallback ? (
           <video
-            key={`bg-${index}`}
-            ref={bgVideoRef}
-            aria-hidden="true"
-            className="absolute inset-0 h-full w-full scale-110 object-cover opacity-50 blur-2xl"
+            key={index}
+            ref={videoRef}
+            className="absolute inset-0 h-full w-full object-cover"
             muted
-            loop
             playsInline
             preload="auto"
             autoPlay={!paused && !reducedMotion}
+            onEnded={goToNext}
             onError={handleVideoError}
           >
             <source src={slide.src} type="video/webm" />
           </video>
         ) : (
           <Image
-            key={`bg-${index}`}
+            key={index}
             src={showVideoFallback ? VIDEO_FALLBACK_SRC : slide.src}
-            alt=""
-            aria-hidden="true"
+            alt={showVideoFallback ? slide.eyebrow : (slide.alt ?? "")}
             fill
             sizes="100vw"
-            className="scale-110 object-cover opacity-50 blur-2xl"
+            className="object-cover"
+            priority={index === 0}
           />
-        ))}
+        )}
 
-      {isDesktop ? (
-        <div className="absolute inset-0 flex items-start justify-center px-8 pb-32 pt-16 xl:px-16">
-          <div
-            className="relative h-full max-w-[85%] overflow-hidden rounded-3xl shadow-2xl ring-1 ring-bone/10"
-            style={{ aspectRatio: showVideoFallback ? VIDEO_FALLBACK_ASPECT : slide.aspect }}
-          >
-            {slide.type === "video" && !showVideoFallback ? (
-              <video
-                key={index}
-                ref={videoRef}
-                className="absolute inset-0 h-full w-full object-cover"
-                muted
-                playsInline
-                preload="auto"
-                autoPlay={!paused && !reducedMotion}
-                onEnded={goToNext}
-                onError={handleVideoError}
-              >
-                <source src={slide.src} type="video/webm" />
-              </video>
-            ) : (
-              <Image
-                key={index}
-                src={showVideoFallback ? VIDEO_FALLBACK_SRC : slide.src}
-                alt={showVideoFallback ? slide.eyebrow : (slide.alt ?? "")}
-                fill
-                sizes="85vw"
-                className="object-cover"
-                priority={index === 0}
-              />
-            )}
-          </div>
-        </div>
-      ) : slide.type === "video" && !showVideoFallback ? (
-        <video
-          key={index}
-          ref={videoRef}
-          className="absolute inset-0 h-full w-full object-cover"
-          muted
-          playsInline
-          preload="auto"
-          autoPlay={!paused && !reducedMotion}
-          onEnded={goToNext}
-          onError={handleVideoError}
-        >
-          <source src={slide.src} type="video/webm" />
-        </video>
-      ) : (
-        <Image
-          key={index}
-          src={showVideoFallback ? VIDEO_FALLBACK_SRC : slide.src}
-          alt={showVideoFallback ? slide.eyebrow : (slide.alt ?? "")}
-          fill
-          sizes="100vw"
-          className="object-cover"
-          priority={index === 0}
+        {/* Lives inside the fading media wrapper (not a static sibling) so it
+            fades in sync with the media instead of staying fully opaque and
+            exposing a dark gradient shape while the media underneath fades in. */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 bg-gradient-to-t from-onyx via-onyx/40 to-transparent"
         />
-      )}
+      </div>
 
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 bg-gradient-to-t from-onyx via-onyx/40 to-transparent"
-      />
-
-      <div className="relative p-4 pb-10 sm:p-8 lg:p-12">
-        <span className="inline-block bg-bone/10 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-gold backdrop-blur">
+      <div ref={contentRef} className="relative p-4 pb-10 sm:p-8 lg:p-12">
+        <span
+          data-hero-eyebrow
+          className="inline-block bg-bone/10 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-gold backdrop-blur"
+        >
           {slide.eyebrow}
         </span>
-        <h1 className="mt-3 max-w-lg font-display text-4xl font-bold leading-tight sm:text-5xl">
+        <h1
+          data-hero-headline
+          className="mt-3 max-w-lg font-display text-4xl font-bold leading-tight sm:text-5xl"
+        >
           {slide.headline}
         </h1>
-        <p className="mt-2 max-w-md text-sm text-bone/75 sm:text-base">{slide.sub}</p>
-        <LineButton className="mt-5 inline-flex items-center gap-2 rounded-full bg-crimson px-6 py-3 text-sm font-semibold text-bone transition-colors hover:bg-crimson-dark">
+        <p data-hero-sub className="mt-2 max-w-md text-sm text-bone/75 sm:text-base">
+          {slide.sub}
+        </p>
+        <LineButton
+          data-hero-cta
+          className="mt-5 inline-flex items-center gap-2 rounded-full bg-crimson px-6 py-3 text-sm font-semibold text-bone transition-colors hover:bg-crimson-dark"
+        >
           <LineIcon className="h-4 w-4" />
           {slide.ctaLabel}
         </LineButton>
@@ -256,31 +359,49 @@ export function HeroCarousel() {
         <button
           type="button"
           aria-label="สไลด์ก่อนหน้า"
-          onClick={() => setIndex((i) => (i - 1 + slides.length) % slides.length)}
-          className="flex h-8 w-8 items-center justify-center rounded-full bg-bone/10 hover:bg-bone/20"
+          onClick={goToPrev}
+          className="hidden h-8 w-8 items-center justify-center rounded-full bg-bone/10 hover:bg-bone/20 lg:flex"
         >
           <ChevronLeftIcon className="h-4 w-4" />
         </button>
-        <div className="flex gap-1.5" role="tablist" aria-label="เลือกสไลด์">
-          {slides.map((s, i) => (
-            <button
-              key={s.headline}
-              type="button"
-              role="tab"
-              aria-selected={i === index}
-              aria-label={`สไลด์ ${i + 1} จาก ${slides.length}`}
-              onClick={() => setIndex(i)}
-              className={`h-1.5 rounded-full transition-all ${
-                i === index ? "w-6 bg-bone" : "w-1.5 bg-bone/40"
-              }`}
+
+        <button
+          type="button"
+          aria-label={paused ? "เล่นต่อ" : "หยุดชั่วคราว"}
+          onClick={() => setPaused((p) => !p)}
+          className="relative flex h-10 w-10 items-center justify-center rounded-full bg-bone/10 hover:bg-bone/20"
+        >
+          <svg viewBox="0 0 40 40" className="absolute inset-0 h-full w-full -rotate-90" aria-hidden="true">
+            <circle
+              cx="20"
+              cy="20"
+              r={ringRadius}
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              className="text-bone/20"
             />
-          ))}
-        </div>
+            <circle
+              cx="20"
+              cy="20"
+              r={ringRadius}
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeDasharray={ringCircumference}
+              strokeDashoffset={ringCircumference * (1 - progress)}
+              className="text-bone"
+            />
+          </svg>
+          {paused ? <PlayIcon className="h-4 w-4" /> : <PauseIcon className="h-4 w-4" />}
+        </button>
+
         <button
           type="button"
           aria-label="สไลด์ถัดไป"
           onClick={goToNext}
-          className="flex h-8 w-8 items-center justify-center rounded-full bg-bone/10 hover:bg-bone/20"
+          className="hidden h-8 w-8 items-center justify-center rounded-full bg-bone/10 hover:bg-bone/20 lg:flex"
         >
           <ChevronRightIcon className="h-4 w-4" />
         </button>
