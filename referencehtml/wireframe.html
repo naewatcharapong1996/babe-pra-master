@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wireframe Template — Nike TH Homepage (Mobile-First)</title>
+<script>
+  // Brand palette (luxury/editorial identity — crimson + gold + onyx on
+  // bone), registered so bg-bone / text-onyx / bg-crimson / text-gold /
+  // border-taupe etc. resolve via the Play CDN's JIT engine below.
+  // Ribbon tabs (bg-black) and the blue annotation notes are this file's
+  // own documentation chrome, not page content — left out of the palette
+  // on purpose so they stay visually distinct from the real UI.
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          bone: '#F6F2EB',
+          onyx: '#121212',
+          crimson: '#800020',
+          'crimson-dark': '#73001D',
+          gold: '#D4AF37',
+          taupe: '#A39181',
+        },
+      },
+    },
+  };
+</script>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  /* Wireframe placeholder utilities — not part of the final product,
+     just makes empty boxes read clearly as "image goes here" etc. */
+  .ph-img {
+    background-image: repeating-linear-gradient(45deg, #e5e7eb 0 10px, #f3f4f6 10px 20px);
+  }
+  .anno {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+</style>
+</head>
+<body class="bg-bone text-onyx anno">
+
+<!-- ======================================================================
+  HOW TO READ THIS FILE
+  Every real section of the page is wrapped in a <section> with:
+   - a numbered black ribbon tab   -> section name as seen on the site
+   - a blue dashed note box        -> what it does + mobile vs desktop behavior
+  Gray hatched boxes = images/photos. Gray bars = text placeholders.
+  Breakpoint used: Tailwind's default `lg:` (1024px) marks the switch from
+  the mobile layout (image 1) to the desktop layout (image 2).
+======================================================================= -->
+
+<div class="max-w-[1400px] mx-auto border-x border-taupe/30">
+
+  <!-- 00 — TOP UTILITY BAR -->
+  <div class="relative border-b border-taupe/30">
+    <span class="absolute -top-3 left-2 bg-black text-white text-[10px] px-2 py-0.5 rounded-sm">00 — UTILITY / PROMO BAR</span>
+    <div class="bg-crimson text-center text-[11px] sm:text-xs py-2 px-8 flex items-center justify-center gap-2 flex-wrap">
+      <span class="text-bone/90">[promo copy — e.g. "สมัคร Nike Member ลด 15%"]</span>
+      <span class="bg-bone/15 border border-bone/30 rounded px-1 text-bone">00:00:00</span>
+    </div>
+    <div class="max-w-2xl mx-auto mt-1 mb-2 border border-dashed border-blue-400 bg-blue-50 text-[11px] text-blue-800 px-3 py-2 rounded">
+      Thin promo strip, full width, dismissible (x on desktop). Shows a rotating
+      discount message and sometimes a countdown timer. Identical on mobile
+      and desktop — only the font size and side padding shrink on mobile.
+    </div>
+  </div>
+
+  <!-- 01 — HEADER / NAV -->
+  <header class="relative border-b border-taupe/30">
+    <span class="absolute -top-3 left-2 bg-black text-white text-[10px] px-2 py-0.5 rounded-sm">01 — HEADER / NAV</span>
+    <div class="flex items-center justify-between px-4 py-3 lg:px-8">
+      <!-- Left cluster: hamburger (mobile-only, opens 01a drawer) + logo -->
+      <div class="flex items-center gap-2">
+        <button
+          id="hamburgerBtn"
+          type="button"
+          class="-ml-1.5 p-1.5 lg:hidden"
+          aria-haspopup="dialog"
+          aria-controls="mobileDrawer"
+          aria-expanded="false"
+          aria-label="เปิดเมนู"
+        >
+          <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        </button>
+        <div class="w-7 h-7 lg:w-8 lg:h-8 shrink-0">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M2 16.5c3.5 3 8 3.3 12.7 1.4C19.4 16 22 12.7 22 12.7S13.8 17 8.6 15.2C6 14.3 4 12.7 2 16.5z"/></svg>
+        </div>
+      </div>
+
+      <!-- Desktop nav links: hidden on mobile, shown lg+ -->
+      <nav class="hidden lg:flex gap-6 text-sm">
+        <a href="#" class="hover:opacity-60">ไม่ใหม่และโปรโมชั่น</a>
+        <a href="#" class="hover:opacity-60">ผู้ชาย</a>
+        <a href="#" class="hover:opacity-60">ผู้หญิง</a>
+        <a href="#" class="hover:opacity-60">เด็ก</a>
+        <a href="#" class="hover:opacity-60">ลดราคา</a>
+        <a href="#" class="hover:opacity-60">SNKRS</a>
+      </nav>
+
+      <!-- Right icon cluster -->
+      <div class="flex items-center gap-4">
+        <!-- search: icon-only on mobile, icon+input on desktop -->
+        <div class="hidden lg:flex items-center bg-taupe/10 rounded-full px-3 py-1.5 w-56">
+          <svg class="w-4 h-4 text-onyx/60 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
+          <span class="text-xs text-onyx/60">ค้นหา</span>
+        </div>
+        <svg class="w-5 h-5 lg:hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
+        <svg class="w-5 h-5 hidden lg:block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-4.5-9.5-9A5.5 5.5 0 0112 5a5.5 5.5 0 019.5 7c-2.5 4.5-9.5 9-9.5 9z"/></svg>
+        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2l1 5h10l1-5M6 7h12l-1 13a2 2 0 01-2 2H9a2 2 0 01-2-2L6 7z"/></svg>
+      </div>
+    </div>
+    <div class="max-w-2xl mx-4 lg:mx-8 mb-3 border border-dashed border-blue-400 bg-blue-50 text-[11px] text-blue-800 px-3 py-2 rounded">
+      <strong>Mobile:</strong> hamburger trigger (left of logo) opens the full-height
+      slide-in drawer documented in 01a below, plus search / cart icons on the right.
+      <strong>Desktop (lg+):</strong> logo, full inline text nav (6 links), an
+      expanded search field, account/wishlist/cart icons. Sticky on scroll on both.
+    </div>
+  </header>
+
+  <!-- 01a — MOBILE NAV DRAWER (hamburger menu, mobile only, functional) -->
+  <div id="mobileDrawer" class="fixed inset-0 z-[60] hidden" aria-hidden="true">
+    <span class="absolute top-2 left-2 z-10 bg-black text-white text-[10px] px-2 py-0.5 rounded-sm">01a — MOBILE NAV DRAWER</span>
+
+    <!-- backdrop: black, fades 0 -> 50% opacity in sync with the panel slide -->
+    <div id="drawerBackdrop" class="absolute inset-0 bg-onyx opacity-0 transition-opacity duration-300 ease-out"></div>
+
+    <!-- panel stack: level 0 (primary) ships in markup; level-1 sub-panels are
+         generated by the script below from PANELS_DATA to avoid repeating
+         near-identical markup seven times -->
+    <div id="drawerPanelStack" class="absolute inset-y-0 left-0 w-[88vw] max-w-[400px] overflow-hidden">
+
+      <div
+        id="drawerLevel0"
+        role="dialog"
+        aria-modal="true"
+        aria-label="เมนูหลัก"
+        class="absolute inset-0 flex flex-col bg-bone -translate-x-full transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]"
+      >
+        <div class="flex items-center justify-between px-4 py-3 border-b border-taupe/30 shrink-0">
+          <svg class="w-7 h-7" viewBox="0 0 24 24" fill="currentColor"><path d="M2 16.5c3.5 3 8 3.3 12.7 1.4C19.4 16 22 12.7 22 12.7S13.8 17 8.6 15.2C6 14.3 4 12.7 2 16.5z"/></svg>
+          <button id="drawerCloseBtn" type="button" class="p-1.5" aria-label="ปิดเมนู">
+            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+          </button>
+        </div>
+
+        <div class="flex-1 overflow-y-auto">
+          <!-- primary nav list -->
+          <ul class="divide-y divide-taupe/30">
+            <li><button type="button" class="drawer-expand-btn flex w-full items-center justify-between px-4 py-5 text-left text-base font-bold" data-target="panel-new">ใหม่และโดดเด่น<svg class="w-4 h-4 shrink-0 text-onyx/60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></button></li>
+            <li><button type="button" class="drawer-expand-btn flex w-full items-center justify-between px-4 py-5 text-left text-base font-bold" data-target="panel-men">ผู้ชาย<svg class="w-4 h-4 shrink-0 text-onyx/60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></button></li>
+            <li><button type="button" class="drawer-expand-btn flex w-full items-center justify-between px-4 py-5 text-left text-base font-bold" data-target="panel-women">ผู้หญิง<svg class="w-4 h-4 shrink-0 text-onyx/60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></button></li>
+            <li><button type="button" class="drawer-expand-btn flex w-full items-center justify-between px-4 py-5 text-left text-base font-bold" data-target="panel-kids">เด็ก<svg class="w-4 h-4 shrink-0 text-onyx/60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></button></li>
+            <li><button type="button" class="drawer-expand-btn flex w-full items-center justify-between px-4 py-5 text-left text-base font-bold" data-target="panel-sale">ลดราคา<svg class="w-4 h-4 shrink-0 text-onyx/60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></button></li>
+            <li><a href="#" class="block px-4 py-5 text-base font-bold">SNKRS</a></li>
+            <li><a href="#" class="block px-4 py-5 text-base font-bold">ดาวน์โหลด Nike App</a></li>
+          </ul>
+
+          <!-- brand row: Jordan -->
+          <div class="border-t border-taupe/30">
+            <a href="#" class="flex items-center gap-3 px-4 py-5">
+              <svg class="w-6 h-6 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M12 3c1.4 1.8.9 3.8-.6 5.2 1.9.4 3.7-.4 4.6-2.2.7 2.2-.4 4.1-2.4 5 2.3.6 4.5-.3 5.6-2.1.6 2.5-1.1 4.9-4 5.7 2.4.1 4.3-.9 5.3-2.4-.6 2.9-3.7 4.8-7.3 4.8-4.1 0-7.5-2.5-7.5-6.1 0-2 1-3.7 2.6-4.8C9 4.5 10.5 3.5 12 3z"/></svg>
+              <span class="text-base font-bold">Jordan</span>
+            </a>
+          </div>
+
+          <!-- membership promo -->
+          <div class="border-t border-taupe/30 px-4 py-5">
+            <p class="text-sm leading-relaxed text-onyx/70">
+              มาเป็น Nike Member เพื่อรับสิทธิประโยชน์และบริการที่ออกแบบมาสำหรับคุณ
+              เข้าถึงสินค้ารุ่นพิเศษ กิจกรรม และส่วนลดก่อนใคร
+              <a href="#" class="text-crimson underline hover:opacity-70">ดูเพิ่มเติม</a>
+            </p>
+            <div class="mt-4 flex gap-3">
+              <button type="button" class="flex-1 rounded-full bg-crimson py-3 text-sm font-medium text-bone hover:bg-crimson-dark">เข้าร่วมกับเรา</button>
+              <button type="button" class="flex-1 rounded-full border border-onyx py-3 text-sm font-medium text-onyx">ลงชื่อเข้าใช้</button>
+            </div>
+          </div>
+
+          <!-- utility list -->
+          <ul class="divide-y divide-taupe/30 border-t border-taupe/30 pb-6">
+            <li>
+              <a href="#" class="flex items-center gap-3 px-4 py-4">
+                <svg class="w-5 h-5 shrink-0 text-onyx/60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 115 .6c0 1.5-2 1.7-2.3 3.1M12 17h.01"/></svg>
+                <span class="text-sm">ความช่วยเหลือ</span>
+              </a>
+            </li>
+            <li>
+              <a href="#" class="flex items-center gap-3 px-4 py-4">
+                <svg class="w-5 h-5 shrink-0 text-onyx/60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 7l1-3h10l1 3M6 7h12l-1 13a2 2 0 01-2 2H9a2 2 0 01-2-2L6 7z"/></svg>
+                <span class="text-sm">ตะกร้า</span>
+              </a>
+            </li>
+            <li>
+              <button type="button" class="drawer-expand-btn flex w-full items-center justify-between px-4 py-4 text-left" data-target="panel-orders">
+                <span class="flex items-center gap-3">
+                  <svg class="w-5 h-5 shrink-0 text-onyx/60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8l9-5 9 5-9 5-9-5z"/><path d="M3 8v8l9 5 9-5V8"/></svg>
+                  <span class="text-sm">คำสั่งซื้อ</span>
+                </span>
+                <svg class="w-4 h-4 shrink-0 text-onyx/60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
+              </button>
+            </li>
+            <li>
+              <button type="button" class="drawer-expand-btn flex w-full items-center justify-between px-4 py-4 text-left" data-target="panel-stores">
+                <span class="flex items-center gap-3">
+                  <svg class="w-5 h-5 shrink-0 text-onyx/60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 10l1-5h14l1 5M4 10v9h16v-9M4 10h16M9 19v-5h6v5"/></svg>
+                  <span class="text-sm">ค้นหาร้าน</span>
+                </span>
+                <svg class="w-4 h-4 shrink-0 text-onyx/60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <!-- level-1 sub-panels injected here by script (see PANELS_DATA) -->
+    </div>
+
+    <div class="absolute bottom-2 left-2 max-w-[80vw] border border-dashed border-blue-400 bg-blue-50 text-[11px] text-blue-800 px-3 py-2 rounded">
+      Full-height left drawer, ~88vw capped at 400px, white bg, independently
+      scrollable. Slides in via <code>translateX(-100% → 0)</code>, 300ms
+      decelerate easing, backdrop fades 0→50% opacity in sync. Chevron items
+      push a second-level panel in from the right (same easing) with a back
+      chevron; body scroll is locked and focus is trapped while open; Escape,
+      the X, or a backdrop click closes it and returns focus to the hamburger.
+    </div>
+  </div>
+
+  <!-- 02 — HERO CAROUSEL -->
+  <section class="relative">
+    <span class="absolute -top-3 left-2 bg-black text-white text-[10px] px-2 py-0.5 rounded-sm z-10">02 — HERO CAROUSEL</span>
+    <div class="relative ph-img aspect-[4/5] lg:aspect-[21/9] flex flex-col justify-end p-4 lg:p-12">
+      <div class="bg-bone/70 inline-block px-2 py-1 mb-2 w-fit">
+        <div class="h-3 w-40 lg:w-72 bg-slate-400 mb-2"></div>
+        <div class="h-3 w-32 lg:w-64 bg-slate-400"></div>
+      </div>
+      <div class="h-3 w-24 bg-slate-300 mb-3"></div>
+      <button class="bg-crimson text-bone text-xs px-4 py-2 rounded-full w-fit hover:bg-crimson-dark">เลือกซื้อ</button>
+      <!-- carousel controls -->
+      <div class="absolute bottom-4 right-4 flex items-center gap-2 text-bone">
+        <span class="text-xs">‹</span>
+        <span class="flex gap-1"><i class="w-4 h-1 bg-bone rounded-full"></i><i class="w-1 h-1 bg-bone/50 rounded-full"></i><i class="w-1 h-1 bg-bone/50 rounded-full"></i></span>
+        <span class="text-xs">›</span>
+      </div>
+    </div>
+    <div class="max-w-2xl mx-4 lg:mx-8 my-3 border border-dashed border-blue-400 bg-blue-50 text-[11px] text-blue-800 px-3 py-2 rounded">
+      Full-bleed athlete/campaign image (e.g. "KYLIAN MBAPPÉ · MERCURIAL
+      SUPERFLY"), headline, one CTA button. Auto-advancing carousel with
+      play/pause + dot indicators, bottom-left/right on desktop. Not visible
+      in the mobile snapshot (it may sit below the fold or the crawler missed
+      it) — kept here since it's core to the desktop layout; confirm on the
+      live mobile site before removing.
+    </div>
+  </section>
+
+  <!-- 03 — FEATURED PRODUCTS (สินค้าเด่น) -->
+  <section class="relative px-4 lg:px-8 pt-8">
+    <span class="absolute -top-3 left-2 bg-black text-white text-[10px] px-2 py-0.5 rounded-sm">03 — FEATURED (สินค้าเด่น)</span>
+    <h2 class="text-xl font-bold mb-4">สินค้าเด่น</h2>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-3">
+      <div class="ph-img aspect-[4/5] relative flex flex-col justify-end p-4">
+        <div class="h-3 w-28 bg-bone/80 mb-1"></div>
+        <div class="h-3 w-20 bg-bone/80 mb-3"></div>
+        <button class="bg-bone text-onyx text-xs px-3 py-1.5 rounded-full w-fit">ดูข้อมูล</button>
+      </div>
+      <div class="ph-img aspect-[4/5] relative flex flex-col justify-end p-4">
+        <div class="h-3 w-28 bg-bone/80 mb-1"></div>
+        <div class="h-3 w-20 bg-bone/80 mb-3"></div>
+        <button class="bg-crimson text-bone text-xs px-3 py-1.5 rounded-full w-fit hover:bg-crimson-dark">เลือกซื้อ</button>
+      </div>
+    </div>
+    <div class="max-w-2xl my-3 border border-dashed border-blue-400 bg-blue-50 text-[11px] text-blue-800 px-3 py-2 rounded">
+      Two editorial/product cards (athlete spotlight + shoe). <strong>Mobile:</strong>
+      stacked full-width, 1 column. <strong>Desktop:</strong> 2-column grid, same
+      cards side by side, larger aspect ratio. Each card = image, short title,
+      pill button ("ดูข้อมูล" / "เลือกซื้อ") bottom-left.
+    </div>
+  </section>
+
+  <!-- 04 — LIFESTYLE BANNER -->
+  <section class="relative px-4 lg:px-8 pt-4">
+    <span class="absolute -top-3 left-2 bg-black text-white text-[10px] px-2 py-0.5 rounded-sm">04 — LIFESTYLE BANNER</span>
+    <div class="ph-img aspect-[4/5] lg:aspect-[21/9] w-full"></div>
+    <div class="max-w-2xl my-3 border border-dashed border-blue-400 bg-blue-50 text-[11px] text-blue-800 px-3 py-2 rounded">
+      Single full-width lifestyle/group photo, no text overlay. Purely a mood
+      image leading into the Studio Fleece story below. Same crop behavior
+      mobile → desktop (portrait-ish on mobile, wide on desktop).
+    </div>
+  </section>
+
+  <!-- 05 — STUDIO FLEECE (campaign CTA) -->
+  <section class="relative px-4 lg:px-8 pt-8 text-center">
+    <span class="absolute -top-3 left-2 bg-black text-white text-[10px] px-2 py-0.5 rounded-sm">05 — CAMPAIGN CTA</span>
+    <h2 class="text-3xl lg:text-4xl font-extrabold tracking-tight">STUDIO FLEECE</h2>
+    <div class="h-3 w-56 bg-slate-300 mx-auto my-3"></div>
+    <button class="bg-crimson text-bone text-xs px-4 py-2 rounded-full hover:bg-crimson-dark">เลือกซื้อ</button>
+    <div class="max-w-2xl mx-auto my-3 border border-dashed border-blue-400 bg-blue-50 text-[11px] text-blue-800 px-3 py-2 rounded text-left">
+      Text-only campaign block: big bold wordmark-style heading, one line of
+      supporting copy, single centered pill CTA. No image — a pause/breather
+      section. Identical mobile and desktop, only the heading size scales up.
+    </div>
+  </section>
+
+  <!-- 06 — TRENDING CAROUSEL (กำลังฮิต) -->
+  <section class="relative pt-8">
+    <span class="absolute -top-3 left-2 bg-black text-white text-[10px] px-2 py-0.5 rounded-sm">06 — TRENDING (กำลังฮิต)</span>
+    <div class="flex items-center justify-between px-4 lg:px-8 mb-4">
+      <h2 class="text-xl font-bold">กำลังฮิต</h2>
+      <div class="hidden lg:flex gap-2">
+        <button class="w-8 h-8 rounded-full border border-taupe/30 flex items-center justify-center hover:bg-taupe/10">‹</button>
+        <button class="w-8 h-8 rounded-full border border-taupe/30 flex items-center justify-center hover:bg-taupe/10">›</button>
+      </div>
+    </div>
+    <div class="flex gap-3 px-4 lg:px-8 overflow-x-auto snap-x">
+      <div class="ph-img shrink-0 w-[70%] sm:w-[45%] lg:w-[24%] aspect-[3/4] relative flex flex-col justify-end p-3 snap-start">
+        <div class="h-2.5 w-24 bg-bone/80 mb-1"></div>
+        <div class="h-2.5 w-16 bg-bone/80 mb-2"></div>
+        <button class="bg-crimson text-bone text-[10px] px-2 py-1 rounded-full w-fit hover:bg-crimson-dark">เลือกซื้อ</button>
+      </div>
+      <div class="ph-img shrink-0 w-[70%] sm:w-[45%] lg:w-[24%] aspect-[3/4] relative flex flex-col justify-end p-3 snap-start">
+        <div class="h-2.5 w-24 bg-bone/80 mb-1"></div>
+        <div class="h-2.5 w-16 bg-bone/80 mb-2"></div>
+        <button class="bg-crimson text-bone text-[10px] px-2 py-1 rounded-full w-fit hover:bg-crimson-dark">เลือกซื้อ</button>
+      </div>
+      <div class="ph-img shrink-0 w-[70%] sm:w-[45%] lg:w-[24%] aspect-[3/4] relative flex flex-col justify-end p-3 snap-start">
+        <div class="h-2.5 w-24 bg-bone/80 mb-1"></div>
+        <div class="h-2.5 w-16 bg-bone/80 mb-2"></div>
+        <button class="bg-crimson text-bone text-[10px] px-2 py-1 rounded-full w-fit hover:bg-crimson-dark">เลือกซื้อ</button>
+      </div>
+      <div class="ph-img shrink-0 w-[70%] sm:w-[45%] lg:w-[24%] aspect-[3/4] relative flex flex-col justify-end p-3 snap-start">
+        <div class="h-2.5 w-24 bg-bone/80 mb-1"></div>
+        <div class="h-2.5 w-16 bg-bone/80 mb-2"></div>
+        <button class="bg-crimson text-bone text-[10px] px-2 py-1 rounded-full w-fit hover:bg-crimson-dark">เลือกซื้อ</button>
+      </div>
+    </div>
+    <div class="max-w-2xl mx-4 lg:mx-8 my-3 border border-dashed border-blue-400 bg-blue-50 text-[11px] text-blue-800 px-3 py-2 rounded">
+      Horizontally scrollable card carousel, each card = image + product name
+      + pill CTA. <strong>Mobile:</strong> swipe/scroll-snap, ~1.3 cards visible
+      (peek of next card signals scrollability), no visible arrows.
+      <strong>Desktop:</strong> prev/next arrow buttons top-right of the section,
+      ~4 cards visible at once.
+    </div>
+  </section>
+
+  <!-- 07 — CURATED / CELEBRITY PICKS -->
+  <section class="relative px-4 lg:px-8 pt-8">
+    <span class="absolute -top-3 left-2 bg-black text-white text-[10px] px-2 py-0.5 rounded-sm">07 — CURATED PICKS</span>
+    <h2 class="text-xl font-bold mb-4">ไอเท็มที่แอน ทองประสม เลือกใส่</h2>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-3">
+      <div class="ph-img aspect-[4/5] relative flex items-end p-3">
+        <button class="bg-bone text-onyx text-xs px-3 py-1.5 rounded-full">เริ่มไอเท็มวิ่งของแอน</button>
+      </div>
+      <div class="ph-img aspect-[4/5] relative flex items-end p-3">
+        <button class="bg-bone text-onyx text-xs px-3 py-1.5 rounded-full">เริ่มลอสแตกกิ้ม Retro Running</button>
+      </div>
+    </div>
+    <div class="max-w-2xl my-3 border border-dashed border-blue-400 bg-blue-50 text-[11px] text-blue-800 px-3 py-2 rounded">
+      Editorial/influencer tie-in — two lifestyle photos, each with a single
+      pill CTA overlaid bottom-left describing the curated bundle.
+      <strong>Mobile:</strong> stacked, full width. <strong>Desktop:</strong> 2-column
+      grid. Same card pattern as section 03, reused.
+    </div>
+  </section>
+
+  <!-- 08 — PRODUCT ROW WITH PRICE (คว้าทุกแต้ม) -->
+  <section class="relative pt-8">
+    <span class="absolute -top-3 left-2 bg-black text-white text-[10px] px-2 py-0.5 rounded-sm">08 — PRODUCT ROW (w/ price)</span>
+    <div class="flex items-center justify-between px-4 lg:px-8 mb-4">
+      <h2 class="text-xl font-bold">คว้าทุกแต้ม</h2>
+      <div class="hidden lg:flex gap-2">
+        <button class="w-8 h-8 rounded-full border border-taupe/30 flex items-center justify-center hover:bg-taupe/10">‹</button>
+        <button class="w-8 h-8 rounded-full border border-taupe/30 flex items-center justify-center hover:bg-taupe/10">›</button>
+      </div>
+    </div>
+    <div class="flex gap-3 px-4 lg:px-8 overflow-x-auto snap-x">
+      <div class="shrink-0 w-[45%] sm:w-[30%] lg:w-[23%] snap-start">
+        <div class="ph-img aspect-square mb-2"></div>
+        <div class="h-2.5 w-3/4 bg-slate-400 mb-1"></div>
+        <div class="h-2.5 w-1/2 bg-slate-300 mb-1"></div>
+        <div class="h-2.5 w-1/3 bg-crimson"></div>
+      </div>
+      <div class="shrink-0 w-[45%] sm:w-[30%] lg:w-[23%] snap-start">
+        <div class="ph-img aspect-square mb-2"></div>
+        <div class="h-2.5 w-3/4 bg-slate-400 mb-1"></div>
+        <div class="h-2.5 w-1/2 bg-slate-300 mb-1"></div>
+        <div class="h-2.5 w-1/3 bg-crimson"></div>
+      </div>
+      <div class="shrink-0 w-[45%] sm:w-[30%] lg:w-[23%] snap-start">
+        <div class="ph-img aspect-square mb-2"></div>
+        <div class="h-2.5 w-3/4 bg-slate-400 mb-1"></div>
+        <div class="h-2.5 w-1/2 bg-slate-300 mb-1"></div>
+        <div class="h-2.5 w-1/3 bg-crimson"></div>
+      </div>
+      <div class="shrink-0 w-[45%] sm:w-[30%] lg:w-[23%] snap-start">
+        <div class="ph-img aspect-square mb-2"></div>
+        <div class="h-2.5 w-3/4 bg-slate-400 mb-1"></div>
+        <div class="h-2.5 w-1/2 bg-slate-300 mb-1"></div>
+        <div class="h-2.5 w-1/3 bg-crimson"></div>
+      </div>
+    </div>
+    <div class="max-w-2xl mx-4 lg:mx-8 my-3 border border-dashed border-blue-400 bg-blue-50 text-[11px] text-blue-800 px-3 py-2 rounded">
+      Real product-catalog row (image, name, short description, price —
+      e.g. "NikeCourt Slam ฿3,500"). No CTA button, whole card is a tap
+      target to PDP. <strong>Mobile:</strong> horizontal scroll,
+      2 cards + peek. <strong>Desktop:</strong> arrow-controlled row,
+      ~4 cards visible.
+    </div>
+  </section>
+
+  <!-- 09 — SHOP BY CATEGORY (เลือกซื้อตามประเภทกีฬา) -->
+  <section class="relative pt-8">
+    <span class="absolute -top-3 left-2 bg-black text-white text-[10px] px-2 py-0.5 rounded-sm">09 — SHOP BY CATEGORY</span>
+    <h2 class="text-xl font-bold px-4 lg:px-8 mb-4">เลือกซื้อตามประเภทกีฬา</h2>
+    <div class="flex gap-3 px-4 lg:px-8 overflow-x-auto snap-x">
+      <div class="shrink-0 w-[85%] sm:w-[45%] lg:w-[23%] snap-start">
+        <div class="ph-img aspect-[3/4] mb-2"></div>
+        <div class="h-2.5 w-20 bg-slate-400"></div>
+      </div>
+      <div class="shrink-0 w-[85%] sm:w-[45%] lg:w-[23%] snap-start">
+        <div class="ph-img aspect-[3/4] mb-2"></div>
+        <div class="h-2.5 w-20 bg-slate-400"></div>
+      </div>
+      <div class="shrink-0 w-[85%] sm:w-[45%] lg:w-[23%] snap-start">
+        <div class="ph-img aspect-[3/4] mb-2"></div>
+        <div class="h-2.5 w-20 bg-slate-400"></div>
+      </div>
+    </div>
+    <div class="max-w-2xl mx-4 lg:mx-8 my-3 border border-dashed border-blue-400 bg-blue-50 text-[11px] text-blue-800 px-3 py-2 rounded">
+      Sport/category tiles (running, football, basketball…) — image + label
+      caption underneath, no button. <strong>Mobile:</strong> the snapshot showed
+      only one tile ("การวิ่ง") meaning it's a scroll carousel with ~1 tile
+      visible at a time. <strong>Desktop:</strong> more tiles per view, still
+      horizontally scrollable.
+    </div>
+  </section>
+
+  <!-- 10 — SPOTLIGHT ICON GRID (สปอตไลท์) -->
+  <section class="relative pt-8 text-center">
+    <span class="absolute -top-3 left-2 bg-black text-white text-[10px] px-2 py-0.5 rounded-sm">10 — SPOTLIGHT GRID</span>
+    <h2 class="text-xl font-bold">สปอตไลท์</h2>
+    <div class="h-2.5 w-64 bg-slate-300 mx-auto my-3"></div>
+    <div class="grid grid-cols-3 lg:grid-cols-6 gap-x-4 gap-y-6 px-4 lg:px-8 mt-6">
+      <div class="flex flex-col items-center gap-2">
+        <div class="ph-img w-14 h-14 lg:w-16 lg:h-16 rounded-full"></div>
+        <div class="h-2 w-14 bg-slate-400"></div>
+      </div>
+      <div class="flex flex-col items-center gap-2">
+        <div class="ph-img w-14 h-14 lg:w-16 lg:h-16 rounded-full"></div>
+        <div class="h-2 w-14 bg-slate-400"></div>
+      </div>
+      <div class="flex flex-col items-center gap-2">
+        <div class="ph-img w-14 h-14 lg:w-16 lg:h-16 rounded-full"></div>
+        <div class="h-2 w-14 bg-slate-400"></div>
+      </div>
+      <div class="flex flex-col items-center gap-2">
+        <div class="ph-img w-14 h-14 lg:w-16 lg:h-16 rounded-full"></div>
+        <div class="h-2 w-14 bg-slate-400"></div>
+      </div>
+      <div class="flex flex-col items-center gap-2">
+        <div class="ph-img w-14 h-14 lg:w-16 lg:h-16 rounded-full"></div>
+        <div class="h-2 w-14 bg-slate-400"></div>
+      </div>
+      <div class="flex flex-col items-center gap-2">
+        <div class="ph-img w-14 h-14 lg:w-16 lg:h-16 rounded-full"></div>
+        <div class="h-2 w-14 bg-slate-400"></div>
+      </div>
+    </div>
+    <button class="mt-6 text-xs underline">ดูทั้งหมด ⌄</button>
+    <div class="max-w-2xl mx-auto my-4 border border-dashed border-blue-400 bg-blue-50 text-[11px] text-blue-800 px-3 py-2 rounded text-left">
+      Round icon + short label tiles (product lines: Air Jordan 1, Dunk, Air
+      Force 1…), a "show all / ดูทั้งหมด" toggle beneath. <strong>Mobile:</strong>
+      3 columns × N rows, collapsed with the toggle to expand more.
+      <strong>Desktop:</strong> up to 6 columns in one row.
+    </div>
+  </section>
+
+  <!-- 11 — FOOTER (explicit dark-section rule: bg-onyx text-bone) -->
+  <footer class="relative bg-onyx text-bone mt-8 pt-8 pb-6 border-t border-bone/10">
+    <span class="absolute -top-3 left-2 bg-black text-white text-[10px] px-2 py-0.5 rounded-sm">11 — FOOTER</span>
+
+    <!-- Mobile: accordion list -->
+    <div class="lg:hidden px-4 divide-y divide-bone/10">
+      <details class="py-3">
+        <summary class="flex justify-between text-sm font-medium">แหล่งข้อมูล <span>⌄</span></summary>
+        <div class="pt-2 space-y-2">
+          <div class="h-2.5 w-32 bg-bone/20"></div>
+          <div class="h-2.5 w-28 bg-bone/20"></div>
+        </div>
+      </details>
+      <details class="py-3">
+        <summary class="flex justify-between text-sm font-medium">ความช่วยเหลือ <span>⌄</span></summary>
+        <div class="pt-2 space-y-2">
+          <div class="h-2.5 w-32 bg-bone/20"></div>
+        </div>
+      </details>
+      <details class="py-3">
+        <summary class="flex justify-between text-sm font-medium">บริษัท <span>⌄</span></summary>
+        <div class="pt-2 space-y-2">
+          <div class="h-2.5 w-32 bg-bone/20"></div>
+        </div>
+      </details>
+    </div>
+
+    <!-- Desktop: expanded columns -->
+    <div class="hidden lg:grid grid-cols-4 gap-6 px-8">
+      <div>
+        <div class="h-3 w-24 bg-bone/40 mb-3"></div>
+        <div class="space-y-2">
+          <div class="h-2.5 w-28 bg-bone/20"></div>
+          <div class="h-2.5 w-24 bg-bone/20"></div>
+          <div class="h-2.5 w-32 bg-bone/20"></div>
+        </div>
+      </div>
+      <div>
+        <div class="h-3 w-24 bg-bone/40 mb-3"></div>
+        <div class="space-y-2">
+          <div class="h-2.5 w-28 bg-bone/20"></div>
+          <div class="h-2.5 w-24 bg-bone/20"></div>
+        </div>
+      </div>
+      <div>
+        <div class="h-3 w-24 bg-bone/40 mb-3"></div>
+        <div class="space-y-2">
+          <div class="h-2.5 w-28 bg-bone/20"></div>
+          <div class="h-2.5 w-24 bg-bone/20"></div>
+        </div>
+      </div>
+      <div class="flex justify-end items-start">
+        <div class="w-8 h-8 rounded-full border border-bone/20"></div>
+      </div>
+    </div>
+
+    <div class="flex flex-wrap items-center justify-between gap-2 px-4 lg:px-8 mt-6 pt-4 border-t border-bone/10 text-[11px] text-taupe">
+      <span>© 2026 Nike, Inc. สงวนลิขสิทธิ์</span>
+      <div class="flex gap-3">
+        <span>ข้อตกลงการใช้</span>
+        <span>นโยบายความเป็นส่วนตัว</span>
+        <span>คุกกี้</span>
+      </div>
+    </div>
+
+    <div class="max-w-2xl mx-4 lg:mx-8 mt-4 border border-dashed border-blue-400 bg-blue-50 text-[11px] text-blue-800 px-3 py-2 rounded">
+      <strong>Mobile:</strong> link groups collapse into &lt;details&gt; accordions
+      (แหล่งข้อมูล / ความช่วยเหลือ / บริษัท), country/language selector below them
+      (not shown in snapshot, add if present live). <strong>Desktop:</strong> same
+      groups shown fully expanded in a 3–4 column grid, plus a social icon in
+      the last column. Both share a bottom legal strip (copyright + policy
+      links).
+    </div>
+  </footer>
+
+</div>
+
+<script>
+(function () {
+  var trigger = document.getElementById('hamburgerBtn');
+  var root = document.getElementById('mobileDrawer');
+  var backdrop = document.getElementById('drawerBackdrop');
+  var level0 = document.getElementById('drawerLevel0');
+  var closeBtn = document.getElementById('drawerCloseBtn');
+  var stack = document.getElementById('drawerPanelStack');
+  if (!trigger || !root) return;
+
+  // Level-1 sub-panel content, generated instead of hand-repeated seven
+  // times in markup — same structure/animation classes as drawerLevel0.
+  var PANELS_DATA = [
+    { id: 'panel-new', title: 'ใหม่และโดดเด่น', items: ['สินค้ามาใหม่', 'สินค้าขายดี', 'แคมเปญล่าสุด'] },
+    { id: 'panel-men', title: 'ผู้ชาย', items: ['รองเท้า', 'เสื้อผ้า', 'อุปกรณ์กีฬา'] },
+    { id: 'panel-women', title: 'ผู้หญิง', items: ['รองเท้า', 'เสื้อผ้า', 'อุปกรณ์กีฬา'] },
+    { id: 'panel-kids', title: 'เด็ก', items: ['รองเท้า', 'เสื้อผ้า', 'ของเล่นกีฬา'] },
+    { id: 'panel-sale', title: 'ลดราคา', items: ['รองเท้าลดราคา', 'เสื้อผ้าลดราคา', 'ดีลพิเศษ'] },
+    { id: 'panel-orders', title: 'คำสั่งซื้อ', items: ['คำสั่งซื้อปัจจุบัน', 'ประวัติการสั่งซื้อ', 'คืนสินค้า'] },
+    { id: 'panel-stores', title: 'ค้นหาร้าน', items: ['ร้านใกล้ฉัน', 'เวลาทำการ', 'บริการในร้าน'] }
+  ];
+
+  PANELS_DATA.forEach(function (p) {
+    var panel = document.createElement('div');
+    panel.className = 'drawer-subpanel absolute inset-0 bg-bone translate-x-full transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]';
+    panel.id = p.id;
+    panel.setAttribute('role', 'dialog');
+    panel.setAttribute('aria-modal', 'true');
+    panel.setAttribute('aria-label', p.title);
+    panel.setAttribute('inert', '');
+    var itemsHtml = p.items.map(function (label) {
+      return '<li><a href="#" class="block px-4 py-4 text-sm">' + label + '</a></li>';
+    }).join('');
+    panel.innerHTML =
+      '<div class="flex items-center gap-3 px-4 py-3 border-b border-taupe/30">' +
+        '<button type="button" class="drawer-back-btn p-1.5 text-onyx" aria-label="ย้อนกลับ">' +
+          '<svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>' +
+        '</button>' +
+        '<span class="text-base font-bold text-onyx">' + p.title + '</span>' +
+      '</div>' +
+      '<ul class="divide-y divide-taupe/30 overflow-y-auto">' + itemsHtml + '</ul>';
+    stack.appendChild(panel);
+  });
+
+  var lastFocused = null;
+  var activePanel = level0;
+
+  function focusableEls(container) {
+    return Array.prototype.slice
+      .call(container.querySelectorAll('a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'))
+      .filter(function (el) { return el.offsetParent !== null; });
+  }
+
+  function onKeydown(e) {
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      closeDrawer();
+      return;
+    }
+    if (e.key === 'Tab') {
+      var focusables = focusableEls(activePanel);
+      if (focusables.length === 0) return;
+      var first = focusables[0];
+      var last = focusables[focusables.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    }
+  }
+
+  function openDrawer() {
+    lastFocused = document.activeElement;
+    root.classList.remove('hidden');
+    root.setAttribute('aria-hidden', 'false');
+    trigger.setAttribute('aria-expanded', 'true');
+    document.documentElement.style.overflow = 'hidden';
+    level0.removeAttribute('inert');
+    activePanel = level0;
+    requestAnimationFrame(function () {
+      backdrop.classList.remove('opacity-0');
+      backdrop.classList.add('opacity-50');
+      level0.classList.remove('-translate-x-full');
+      level0.classList.add('translate-x-0');
+    });
+    document.addEventListener('keydown', onKeydown);
+    setTimeout(function () { closeBtn.focus(); }, 300);
+  }
+
+  function closeDrawer() {
+    backdrop.classList.remove('opacity-50');
+    backdrop.classList.add('opacity-0');
+    level0.classList.remove('translate-x-0');
+    level0.classList.add('-translate-x-full');
+    Array.prototype.forEach.call(stack.querySelectorAll('.drawer-subpanel'), function (p) {
+      p.classList.remove('translate-x-0');
+      p.classList.add('translate-x-full');
+      p.setAttribute('inert', '');
+    });
+    trigger.setAttribute('aria-expanded', 'false');
+    document.removeEventListener('keydown', onKeydown);
+    activePanel = level0;
+
+    var onEnd = function () {
+      root.classList.add('hidden');
+      root.setAttribute('aria-hidden', 'true');
+      document.documentElement.style.overflow = '';
+      level0.removeEventListener('transitionend', onEnd);
+    };
+    level0.addEventListener('transitionend', onEnd);
+
+    if (lastFocused && typeof lastFocused.focus === 'function') lastFocused.focus();
+  }
+
+  function openPanel(id) {
+    var panel = document.getElementById(id);
+    if (!panel) return;
+    level0.setAttribute('inert', '');
+    panel.removeAttribute('inert');
+    requestAnimationFrame(function () {
+      panel.classList.remove('translate-x-full');
+      panel.classList.add('translate-x-0');
+    });
+    activePanel = panel;
+    setTimeout(function () {
+      var back = panel.querySelector('.drawer-back-btn');
+      if (back) back.focus();
+    }, 300);
+  }
+
+  function closePanel(panel) {
+    panel.classList.remove('translate-x-0');
+    panel.classList.add('translate-x-full');
+    panel.setAttribute('inert', '');
+    level0.removeAttribute('inert');
+    activePanel = level0;
+    setTimeout(function () {
+      var trg = level0.querySelector('[data-target="' + panel.id + '"]');
+      (trg || closeBtn).focus();
+    }, 300);
+  }
+
+  trigger.addEventListener('click', openDrawer);
+  closeBtn.addEventListener('click', closeDrawer);
+  backdrop.addEventListener('click', closeDrawer);
+
+  Array.prototype.forEach.call(level0.querySelectorAll('.drawer-expand-btn'), function (btn) {
+    btn.addEventListener('click', function () { openPanel(btn.dataset.target); });
+  });
+
+  stack.addEventListener('click', function (e) {
+    var back = e.target.closest('.drawer-back-btn');
+    if (back) closePanel(back.closest('.drawer-subpanel'));
+  });
+})();
+</script>
+
+</body>
+</html>

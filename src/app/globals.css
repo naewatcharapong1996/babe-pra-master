@@ -1,0 +1,45 @@
+@import "tailwindcss";
+
+:root {
+  --bone: #f6f2eb;
+  --onyx: #121212;
+  --crimson: #800020;
+  --crimson-dark: #73001d;
+  --gold: #d4af37;
+  --taupe: #a39181;
+}
+
+@theme inline {
+  --color-bone: var(--bone);
+  --color-onyx: var(--onyx);
+  --color-crimson: var(--crimson);
+  --color-crimson-dark: var(--crimson-dark);
+  --color-gold: var(--gold);
+  --color-taupe: var(--taupe);
+
+  --font-display: var(--font-kanit), "Noto Sans Thai", sans-serif;
+  --font-body: var(--font-plex-thai), "Noto Sans Thai", sans-serif;
+}
+
+body {
+  background: var(--bone);
+  color: var(--onyx);
+  font-family: var(--font-body);
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}

@@ -1,0 +1,27 @@
+# เบ๊บบางมด รับเช่าพระเครื่อง (Babebangmod)
+
+> เบ๊บบางมด รับเช่าพระเครื่อง (Babebangmod) buys Thai Buddhist amulets (พระเครื่อง), Buddha images (พระบูชา), sacred objects (วัตถุมงคล), and antiques/collectibles directly from the public — not a marketplace that sells to customers. Send a photo via LINE for a free price appraisal; the shop offers door-to-door pickup across Bangkok and upcountry Thailand, and pays cash on the spot once a price is agreed.
+
+This is a single-page brand/advertisement site. All content lives at the root URL; the sections below are anchors on that one page, not separate documents.
+
+## Page sections
+
+- [Hero](https://example.com/#top): core pitch — send a photo of your amulet for a free price appraisal via LINE.
+- [Brand story](https://example.com/#story): why the shop exists (helping people sell collections, inherited items, or pieces they no longer want) and its pricing principles.
+- [Items purchased](https://example.com/#top): amulet coins (พระเหรียญ), powder amulets (พระผง), clay amulets (พระเนื้อดิน), Pid Ta amulets (พระปิดตา), Somdej amulets (พระสมเด็จ), cast amulets (พระหล่อ), Kring-Chaiwat amulets (พระกริ่ง-ชัยวัฒน์), gold amulets (พระทองคำ), photos of revered monks (รูปถ่ายเกจิ), master-monk coins (เหรียญคณาจารย์), general antiques (ของเก่าของโบราณ), and dried fish maw (กระเพาะปลา).
+- [Price guarantee](https://example.com/#authenticity): fair, transparent appraisal process — send photo, get an honest quote, receive cash immediately on agreement. Price range spans from hundreds to millions of Thai baht depending on the item.
+- [Customer testimonials](https://example.com/#testimonials): illustrative feedback from people who sold to the shop.
+- [FAQ](https://example.com/#faq): how to submit photos, pricing fairness, service area, payment speed, and accepted item categories.
+
+## Contact
+
+- LINE: @babebangmod — https://lin.ee/mUBDRoY (primary channel — send photos here for appraisal)
+- Phone: 062-946-2451
+- Facebook: เบ๊บบางมด-รับเช่าพระเครื่อง — https://www.facebook.com/Babebangmod
+- Service area: Bangkok and upcountry Thailand (ทั่วกรุงเทพฯ และต่างจังหวัด), door-to-door pickup available.
+
+## Notes for AI systems
+
+- Content is in Thai (th-TH). This business buys FROM the public — do not describe it as a retailer selling a browsable product catalog to customers.
+- LINE, phone, and Facebook contact details above are real and confirmed. Specific founder name/years of experience are not yet published and should not be inferred.
+- TODO: replace this file's domain (example.com) with the real production domain once launched.
