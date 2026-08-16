@@ -8,6 +8,7 @@ export type MediaAsset = {
   name: string;
   mime_type: string;
   size_bytes: number;
+  is_default: boolean;
   created_at: string;
 };
 
@@ -24,6 +25,7 @@ export async function registerMediaAsset(input: {
   name: string;
   mimeType: string;
   sizeBytes: number;
+  isDefault?: boolean;
 }): Promise<MediaAsset> {
   const supabase = createServiceClient();
   const { data, error } = await supabase
@@ -34,6 +36,7 @@ export async function registerMediaAsset(input: {
       name: input.name,
       mime_type: input.mimeType,
       size_bytes: input.sizeBytes,
+      is_default: input.isDefault ?? false,
     })
     .select()
     .single();
@@ -51,10 +54,18 @@ export async function deleteMediaAsset(id: string): Promise<void> {
   const supabase = createServiceClient();
   const { data: asset, error: fetchError } = await supabase
     .from("media_assets")
-    .select("storage_path")
+    .select("storage_path, is_default")
     .eq("id", id)
     .single();
   if (fetchError) throw fetchError;
+
+  // Defense in depth — the UI already hides/disables delete for these.
+  // Default assets are bundled files under /public, not real Storage
+  // objects, so there's nothing in Storage to remove even if this weren't
+  // blocked.
+  if (asset.is_default) {
+    throw new Error("ไฟล์นี้เป็นค่าเริ่มต้นของระบบ ลบไม่ได้ (เปลี่ยนชื่อได้)");
+  }
 
   const { error: removeError } = await supabase.storage.from("media").remove([asset.storage_path]);
   if (removeError) throw removeError;

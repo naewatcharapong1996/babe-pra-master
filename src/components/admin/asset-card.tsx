@@ -78,6 +78,11 @@ export function AssetCard({
             เลือกไฟล์นี้
           </span>
         )}
+        {asset.is_default && (
+          <span className="absolute left-1.5 top-1.5 rounded-full bg-onyx/80 px-2 py-0.5 text-[10px] font-semibold text-bone">
+            ค่าเริ่มต้น
+          </span>
+        )}
       </button>
 
       {mode === "library" && editing ? (
@@ -116,12 +121,15 @@ export function AssetCard({
 
       <p className="text-[11px] text-onyx/40">{formatSize(asset.size_bytes)}</p>
 
-      {mode === "library" && (
-        <Button variant="danger-soft" size="sm" isDisabled={deleting} onPress={handleDelete} className="gap-1.5">
-          {deleting && <Spinner size="sm" color="current" />}
-          {deleting ? "กำลังลบ..." : "ลบ"}
-        </Button>
-      )}
+      {mode === "library" &&
+        (asset.is_default ? (
+          <p className="text-center text-[11px] text-onyx/40">ไฟล์เริ่มต้นของระบบ ลบไม่ได้</p>
+        ) : (
+          <Button variant="danger-soft" size="sm" isDisabled={deleting} onPress={handleDelete} className="gap-1.5">
+            {deleting && <Spinner size="sm" color="current" />}
+            {deleting ? "กำลังลบ..." : "ลบ"}
+          </Button>
+        ))}
     </div>
   );
 }
