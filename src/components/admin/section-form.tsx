@@ -2,9 +2,11 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { Button, Spinner, toast } from "@heroui/react";
 import type { FieldDef } from "@/lib/admin/field-defs";
 import type { SectionKey } from "@/lib/content/schema";
 import { saveDraftAction } from "@/app/admin/actions";
+import { useAdminStore } from "@/lib/admin/store";
 import { MediaField } from "./media-field";
 
 type Json = Record<string, unknown>;
@@ -212,22 +214,26 @@ export function SectionForm({
   const [value, setValue] = useState<Json>(initialValue);
   const [baseline, setBaseline] = useState<Json>(initialValue);
   const [saving, setSaving] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [savedAt, setSavedAt] = useState<number | null>(null);
+  const setPending = useAdminStore((s) => s.setPending);
 
   const dirty = JSON.stringify(value) !== JSON.stringify(baseline);
 
   async function handleSave() {
     setSaving(true);
-    setError(null);
-    const result = await saveDraftAction(sectionKey, value);
-    setSaving(false);
-    if (!result.ok) {
-      setError(result.error);
-      return;
+    try {
+      const result = await saveDraftAction(sectionKey, value);
+      if (!result.ok) {
+        toast.danger(result.error);
+        return;
+      }
+      setBaseline(value);
+      setPending(sectionKey, true);
+      toast.success("บันทึกฉบับร่างแล้ว");
+    } catch {
+      toast.danger("บันทึกไม่สำเร็จ ลองใหม่อีกครั้ง");
+    } finally {
+      setSaving(false);
     }
-    setBaseline(value);
-    setSavedAt(Date.now());
   }
 
   return (
@@ -241,24 +247,21 @@ export function SectionForm({
         />
       ))}
 
-      <div className="sticky bottom-0 -mx-4 flex items-center gap-3 border-t border-taupe/30 bg-bone/95 px-4 py-3 backdrop-blur sm:-mx-0 sm:rounded-xl sm:border sm:px-4">
-        <button
-          type="button"
-          onClick={handleSave}
-          disabled={saving || !dirty}
-          className="rounded-full bg-onyx px-6 py-2.5 text-sm font-semibold text-bone transition-colors hover:bg-onyx/90 disabled:opacity-40"
-        >
-          {saving ? "กำลังบันทึก..." : "บันทึกฉบับร่าง"}
-        </button>
-        <Link
-          href="/admin/preview"
-          target="_blank"
-          className="rounded-full border border-taupe/40 px-6 py-2.5 text-sm font-semibold text-onyx hover:bg-taupe/10"
-        >
-          ดูตัวอย่าง
-        </Link>
-        {error && <span className="text-sm text-crimson">{error}</span>}
-        {!error && !dirty && savedAt && <span className="text-sm text-onyx/50">บันทึกแล้ว — อย่าลืมกด "เผยแพร่" ที่หน้าแดชบอร์ดเพื่อขึ้นเว็บจริง</span>}
+      <div className="sticky bottom-0 -mx-4 flex flex-col gap-2 border-t border-taupe/30 bg-bone/95 px-4 py-3 backdrop-blur sm:-mx-0 sm:rounded-xl sm:border sm:px-4">
+        <div className="flex items-center gap-3">
+          <Button variant="primary" size="md" isDisabled={saving || !dirty} onPress={handleSave} className="gap-2">
+            {saving && <Spinner size="sm" color="current" />}
+            {saving ? "กำลังบันทึก..." : "บันทึกฉบับร่าง"}
+          </Button>
+          <Link
+            href="/admin/preview"
+            target="_blank"
+            className="rounded-full border border-taupe/40 px-6 py-2.5 text-sm font-semibold text-onyx hover:bg-taupe/10"
+          >
+            ดูตัวอย่าง
+          </Link>
+        </div>
+        <p className="text-xs text-onyx/50">การบันทึกที่นี่เป็นแค่ฉบับร่าง ต้องกด "เผยแพร่ขึ้นเว็บจริง" ที่หน้าแดชบอร์ดถึงจะขึ้นเว็บจริง</p>
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
+import { Button, Spinner } from "@heroui/react";
 import { signInAction } from "@/app/admin/actions";
 
 export function LoginForm() {
@@ -40,13 +41,10 @@ export function LoginForm() {
 
       {state.error && <p className="text-sm text-crimson">{state.error}</p>}
 
-      <button
-        type="submit"
-        disabled={pending}
-        className="mt-2 rounded-full bg-onyx px-6 py-2.5 text-sm font-semibold text-bone transition-colors hover:bg-onyx/90 disabled:opacity-60"
-      >
+      <Button type="submit" variant="primary" size="md" isDisabled={pending} className="mt-2 gap-2">
+        {pending && <Spinner size="sm" color="current" />}
         {pending ? "กำลังเข้าสู่ระบบ..." : "เข้าสู่ระบบ"}
-      </button>
+      </Button>
     </form>
   );
 }

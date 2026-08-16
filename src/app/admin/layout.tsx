@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { ToastProvider } from "@heroui/react";
 
 export const metadata: Metadata = {
   title: { template: "%s | แอดมิน", default: "แอดมิน" },
@@ -6,5 +7,10 @@ export const metadata: Metadata = {
 };
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
-  return children;
+  return (
+    <>
+      {children}
+      <ToastProvider placement="top" />
+    </>
+  );
 }

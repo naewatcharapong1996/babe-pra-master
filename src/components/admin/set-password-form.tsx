@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
+import { Button, Spinner } from "@heroui/react";
 import { setPasswordAction } from "@/app/admin/actions";
 
 export function SetPasswordForm() {
@@ -42,13 +43,10 @@ export function SetPasswordForm() {
 
       {state.error && <p className="text-sm text-crimson">{state.error}</p>}
 
-      <button
-        type="submit"
-        disabled={pending}
-        className="mt-2 rounded-full bg-onyx px-6 py-2.5 text-sm font-semibold text-bone transition-colors hover:bg-onyx/90 disabled:opacity-60"
-      >
+      <Button type="submit" variant="primary" size="md" isDisabled={pending} className="mt-2 gap-2">
+        {pending && <Spinner size="sm" color="current" />}
         {pending ? "กำลังบันทึก..." : "ตั้งรหัสผ่านและเข้าสู่ระบบ"}
-      </button>
+      </Button>
     </form>
   );
 }

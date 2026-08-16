@@ -7,25 +7,14 @@ import { createUploadUrlAction, registerMediaAssetAction } from "@/app/admin/act
 import { uploadFileWithProgress } from "@/lib/supabase/upload-with-progress";
 import { MAX_UPLOAD_BYTES, MAX_UPLOAD_MB } from "@/lib/admin/constants";
 import type { MediaAsset } from "@/lib/content/media-repository";
-import { MediaPickerModal } from "./media-picker-modal";
+import { AssetCard } from "./asset-card";
 
 type UploadProgress = { loaded: number; total: number };
 
-export function MediaField({
-  label,
-  value,
-  onChange,
-  optional,
-}: {
-  label: string;
-  value: string | null | undefined;
-  onChange: (url: string) => void;
-  optional?: boolean;
-}) {
+export function MediaLibraryBody({ initialAssets }: { initialAssets: MediaAsset[] }) {
+  const [assets, setAssets] = useState(initialAssets);
   const [progress, setProgress] = useState<UploadProgress | null>(null);
-  const [pickerOpen, setPickerOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
-  const isVideo = /\.(webm|mp4|mov)$/i.test(value ?? "");
 
   async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -57,7 +46,7 @@ export function MediaField({
         onProgress: (loaded, total) => setProgress({ loaded, total }),
       });
 
-      await registerMediaAssetAction({
+      const asset = await registerMediaAssetAction({
         storagePath: created.path,
         publicUrl: created.publicUrl,
         name: file.name,
@@ -65,7 +54,7 @@ export function MediaField({
         sizeBytes: file.size,
       });
 
-      onChange(created.publicUrl);
+      setAssets((prev) => [asset, ...prev]);
       toast.success("อัปโหลดไฟล์แล้ว");
     } catch {
       toast.danger("อัปโหลดไม่สำเร็จ ลองใหม่อีกครั้ง");
@@ -79,45 +68,17 @@ export function MediaField({
   const percent = uploading ? Math.round((progress.loaded / progress.total) * 100) : 0;
 
   return (
-    <div className="flex flex-col gap-1.5">
-      <span className="text-sm font-medium text-onyx">
-        {label}
-        {optional && <span className="ml-1 text-xs font-normal text-onyx/50">(ไม่บังคับ)</span>}
-      </span>
-
-      <div className="flex items-center gap-3">
-        {value ? (
-          <div className="relative h-24 w-24 flex-none overflow-hidden rounded-lg border border-taupe/40 bg-taupe/10">
-            {isVideo ? (
-              <video src={value} className="h-full w-full object-cover" muted playsInline />
-            ) : (
-              // eslint-disable-next-line @next/next/no-img-element -- admin-only preview of an arbitrary uploaded URL
-              <img src={value} alt="" className="h-full w-full object-cover" />
-            )}
-          </div>
-        ) : (
-          <div className="flex h-24 w-24 flex-none items-center justify-center rounded-lg border border-dashed border-taupe/40 text-xs text-onyx/40">
-            ยังไม่มีไฟล์
-          </div>
-        )}
-
-        <div className="flex flex-col gap-2">
-          <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              isDisabled={uploading}
-              onPress={() => inputRef.current?.click()}
-              className="gap-2"
-            >
-              <UploadIcon className="h-4 w-4" />
-              {value ? "อัปโหลดใหม่" : "อัปโหลดไฟล์"}
-            </Button>
-            <Button variant="ghost" size="sm" isDisabled={uploading} onPress={() => setPickerOpen(true)}>
-              เลือกจากคลัง
-            </Button>
-          </div>
-
+    <div className="mx-auto max-w-4xl px-4 py-8 sm:px-8">
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-4 rounded-xl border border-taupe/30 bg-taupe/5 p-4">
+        <div>
+          <p className="text-sm font-medium text-onyx">ไฟล์ทั้งหมด {assets.length} รายการ</p>
+          <p className="mt-0.5 text-xs text-onyx/50">อัปโหลดที่นี่แล้วนำไปใช้ซ้ำได้ทุกส่วนของเว็บ ผ่านปุ่ม "เลือกจากคลัง"</p>
+        </div>
+        <div className="flex flex-col items-end gap-1">
+          <Button variant="primary" size="md" isDisabled={uploading} onPress={() => inputRef.current?.click()} className="gap-2">
+            <UploadIcon className="h-4 w-4" />
+            อัปโหลดไฟล์ใหม่
+          </Button>
           {uploading && (
             <div className="flex w-48 flex-col gap-1">
               <ProgressBar value={percent} minValue={0} maxValue={100} aria-label="ความคืบหน้าการอัปโหลด">
@@ -135,11 +96,20 @@ export function MediaField({
 
       <input ref={inputRef} type="file" accept="image/*,video/*" onChange={handleFileChange} className="hidden" />
 
-      <MediaPickerModal
-        open={pickerOpen}
-        onOpenChange={setPickerOpen}
-        onSelect={(asset: MediaAsset) => onChange(asset.public_url)}
-      />
+      {assets.length === 0 ? (
+        <p className="py-16 text-center text-sm text-onyx/50">ยังไม่มีไฟล์ในคลัง</p>
+      ) : (
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+          {assets.map((asset) => (
+            <AssetCard
+              key={asset.id}
+              asset={asset}
+              mode="library"
+              onDeleted={(id) => setAssets((prev) => prev.filter((a) => a.id !== id))}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

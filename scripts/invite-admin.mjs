@@ -21,6 +21,26 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY,
 );
 
-const { data, error } = await supabase.auth.admin.inviteUserByEmail(email);
+async function invite() {
+  return supabase.auth.admin.inviteUserByEmail(email);
+}
+
+let { data, error } = await invite();
+
+if (error?.code === "email_exists") {
+  // Still-pending invite from before the redirect/email-template config was
+  // fixed — inviteUserByEmail won't resend to an existing (even
+  // unconfirmed) user, so drop the stale record and re-invite.
+  const { data: list, error: listError } = await supabase.auth.admin.listUsers({ perPage: 200 });
+  if (listError) throw listError;
+  const existing = list.users.find((u) => u.email === email);
+  if (!existing) throw new Error(`Got email_exists but couldn't find a matching user for ${email}`);
+
+  const { error: deleteError } = await supabase.auth.admin.deleteUser(existing.id);
+  if (deleteError) throw deleteError;
+
+  ({ data, error } = await invite());
+}
+
 if (error) throw error;
 console.log(`Invited ${data.user.email} (id: ${data.user.id}) — check their inbox for the setup link.`);
