@@ -89,10 +89,10 @@ export function MediaField({
         {value ? (
           <div className="relative h-24 w-24 flex-none overflow-hidden rounded-lg border border-taupe/40 bg-taupe/10">
             {isVideo ? (
-              <video src={value} className="h-full w-full object-cover" muted playsInline />
+              <video src={value} className="h-full w-full object-cover" muted playsInline preload="metadata" />
             ) : (
               // eslint-disable-next-line @next/next/no-img-element -- admin-only preview of an arbitrary uploaded URL
-              <img src={value} alt="" className="h-full w-full object-cover" />
+              <img src={value} alt="" loading="lazy" className="h-full w-full object-cover" />
             )}
           </div>
         ) : (

@@ -68,10 +68,10 @@ export function AssetCard({
         className="relative aspect-square w-full overflow-hidden rounded-lg bg-taupe/10 disabled:cursor-default"
       >
         {isVideo ? (
-          <video src={asset.public_url} className="h-full w-full object-cover" muted playsInline />
+          <video src={asset.public_url} className="h-full w-full object-cover" muted playsInline preload="metadata" />
         ) : (
           // eslint-disable-next-line @next/next/no-img-element -- admin-only preview of a Supabase Storage URL
-          <img src={asset.public_url} alt={asset.name} className="h-full w-full object-cover" />
+          <img src={asset.public_url} alt={asset.name} loading="lazy" className="h-full w-full object-cover" />
         )}
         {mode === "picker" && (
           <span className="absolute inset-0 flex items-center justify-center bg-onyx/0 text-transparent transition-colors hover:bg-onyx/40 hover:text-bone">
