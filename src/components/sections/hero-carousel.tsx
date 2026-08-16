@@ -18,7 +18,7 @@ const VIDEO_FALLBACK_ASPECT = "4 / 3";
 
 type Slide = {
   type: "video" | "image";
-  src: string;
+  mediaUrl: string;
   /** True aspect ratio of the source media, used to size the desktop floating panel with zero crop. */
   aspect: string;
   alt?: string;
@@ -28,70 +28,7 @@ type Slide = {
   ctaLabel: string;
 };
 
-// Alternates video -> picture -> video -> picture ... then loops back to slide 1.
-// Every slide's CTA is the same LINE contact action on purpose — the hero's
-// only job is "get them to send a photo"; browsing lives further down the page.
-const slides: Slide[] = [
-  {
-    type: "video",
-    src: "/media/hero/video-1.webm",
-    aspect: "9 / 16",
-    eyebrow: "รับเช่าพระเครื่อง พระบูชา วัตถุมงคล",
-    headline: "ส่งรูปพระ มาตีราคาได้เลย",
-    sub: "ตอบไว รวดเร็ว ให้ราคาสูงสุด จ่ายเงินสดทันที",
-    ctaLabel: "ทักไลน์ส่งรูปประเมินราคา",
-  },
-  {
-    type: "image",
-    src: "/media/hero/picture-1.jpeg",
-    aspect: "4 / 3",
-    alt: "เลิกสะสม พระมรดกตกทอด",
-    eyebrow: "เลิกสะสม พระมรดกตกทอด",
-    headline: "มีพระเครื่องต้องการปล่อย?",
-    sub: "การันตีราคาเป็นธรรม ตั้งแต่หลักร้อยถึงหลักล้าน",
-    ctaLabel: "ทักไลน์เลย",
-  },
-  {
-    type: "video",
-    src: "/media/hero/video-2.webm",
-    aspect: "9 / 16",
-    eyebrow: "บริการถึงที่",
-    headline: "รับซื้อพระถึงบ้าน",
-    sub: "สะดวก รวดเร็ว ปลอดภัย ทั่วกรุงเทพฯ และต่างจังหวัด",
-    ctaLabel: "ทักไลน์นัดหมาย",
-  },
-  {
-    type: "image",
-    src: "/media/hero/picture-2.jpeg",
-    aspect: "4 / 3",
-    alt: "ต้องการเงินด่วน",
-    eyebrow: "ต้องการเงินด่วน?",
-    headline: "จ่ายเงินสดทันที ไม่ต้องรอ",
-    sub: "ส่งภาพพระมาให้เราประเมินราคา ตอบไวทันใจ",
-    ctaLabel: "ทักไลน์ด่วน",
-  },
-  {
-    type: "video",
-    src: "/media/hero/video-3.webm",
-    aspect: "9 / 16",
-    eyebrow: "รับซื้อทุกประเภท",
-    headline: "พระเครื่อง วัตถุมงคล ของเก่าของโบราณ",
-    sub: "พระเหรียญ พระผง พระสมเด็จ พระปิดตา พระกริ่ง และของสะสมทุกชนิด",
-    ctaLabel: "ทักไลน์สอบถาม",
-  },
-  {
-    type: "image",
-    src: "/media/hero/picture-3.jpeg",
-    aspect: "4 / 3",
-    alt: "ดันราคาให้สูงสุด",
-    eyebrow: "ดันราคาให้สูงสุด",
-    headline: "ประเมินราคาโดยทีมงานมืออาชีพ",
-    sub: "ตรวจสอบอย่างละเอียด ตรงไปตรงมา ให้ราคาสูงสุดทุกรายการ",
-    ctaLabel: "ทักไลน์ประเมินราคา",
-  },
-];
-
-export function HeroCarousel() {
+export function HeroCarousel({ slides }: { slides: Slide[] }) {
   const [index, setIndex] = useState(0);
   // Autoplay only stops via the explicit pause button — no hover/focus
   // auto-pause, so the carousel keeps running regardless of mouse position.
@@ -248,12 +185,12 @@ export function HeroCarousel() {
               autoPlay={!paused && !reducedMotion}
               onError={handleVideoError}
             >
-              <source src={slide.src} type="video/webm" />
+              <source src={slide.mediaUrl} type="video/webm" />
             </video>
           ) : (
             <Image
               key={`bg-${index}`}
-              src={showVideoFallback ? VIDEO_FALLBACK_SRC : slide.src}
+              src={showVideoFallback ? VIDEO_FALLBACK_SRC : slide.mediaUrl}
               alt=""
               aria-hidden="true"
               fill
@@ -280,12 +217,12 @@ export function HeroCarousel() {
                   onEnded={goToNext}
                   onError={handleVideoError}
                 >
-                  <source src={slide.src} type="video/webm" />
+                  <source src={slide.mediaUrl} type="video/webm" />
                 </video>
               ) : (
                 <Image
                   key={index}
-                  src={showVideoFallback ? VIDEO_FALLBACK_SRC : slide.src}
+                  src={showVideoFallback ? VIDEO_FALLBACK_SRC : slide.mediaUrl}
                   alt={showVideoFallback ? slide.eyebrow : (slide.alt ?? "")}
                   fill
                   sizes="85vw"
@@ -307,12 +244,12 @@ export function HeroCarousel() {
             onEnded={goToNext}
             onError={handleVideoError}
           >
-            <source src={slide.src} type="video/webm" />
+            <source src={slide.mediaUrl} type="video/webm" />
           </video>
         ) : (
           <Image
             key={index}
-            src={showVideoFallback ? VIDEO_FALLBACK_SRC : slide.src}
+            src={showVideoFallback ? VIDEO_FALLBACK_SRC : slide.mediaUrl}
             alt={showVideoFallback ? slide.eyebrow : (slide.alt ?? "")}
             fill
             sizes="100vw"

@@ -1,27 +1,8 @@
 import { StarIcon } from "../icons";
 
-// Sample/illustrative testimonials with anonymized initials-only names.
-// Replace with real, consented customer reviews before launch.
-const testimonials = [
-  {
-    initials: "ส.ท.",
-    name: "คุณสมชาย ท.",
-    quote:
-      "ส่งรูปไปตอนเช้า ทางร้านตอบกลับไวมาก ตีราคาให้เป็นธรรม ไม่กดราคา นัดมารับถึงบ้านและจ่ายเงินสดทันที",
-  },
-  {
-    initials: "พ.ก.",
-    name: "คุณพิมพ์ กมล",
-    quote: "มีพระมรดกของคุณพ่อที่อยากปล่อยให้คนอื่นได้บูชาต่อ ทีมงานอธิบายขั้นตอนชัดเจน ไม่เร่งให้ตัดสินใจ",
-  },
-  {
-    initials: "อ.ว.",
-    name: "คุณอนุชา ว.",
-    quote: "เลิกสะสมแล้วอยากปล่อยของทั้งหมดในคราวเดียว สะดวกมาก ไม่ต้องเดินทางไปที่ร้านเอง บริการประทับใจ",
-  },
-];
+type Testimonial = { initials: string; name: string; quote: string };
 
-export function TestimonialsSection() {
+export function TestimonialsSection({ items: testimonials }: { items: Testimonial[] }) {
   return (
     <section id="testimonials" className="bg-taupe/10 py-20 sm:py-28">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">

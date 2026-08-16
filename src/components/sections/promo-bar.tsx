@@ -2,18 +2,15 @@
 
 import { useState } from "react";
 import { CloseIcon } from "../icons";
-import { siteConfig } from "@/lib/site-config";
 
-export function PromoBar() {
+export function PromoBar({ message }: { message: string }) {
   const [dismissed, setDismissed] = useState(false);
 
   if (dismissed) return null;
 
   return (
     <div className="relative flex items-center justify-center gap-2 bg-crimson px-8 py-2 text-center text-[11px] text-bone sm:text-xs">
-      <span>
-        ส่งรูปพระมาให้เราตีราคาฟรีวันนี้ — {siteConfig.lineId}
-      </span>
+      <span>{message}</span>
       <button
         type="button"
         aria-label="ปิดแถบโปรโมชั่น"

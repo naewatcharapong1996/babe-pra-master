@@ -1,11 +1,7 @@
 import type { Metadata } from "next";
 import { Kanit, IBM_Plex_Sans_Thai } from "next/font/google";
 import "./globals.css";
-import { SiteHeader } from "@/components/site-header";
-import { SiteFooter } from "@/components/site-footer";
-import { LineModalProvider } from "@/components/line-modal";
 import { siteConfig } from "@/lib/site-config";
-import { organizationJsonLd, websiteJsonLd } from "@/lib/schema";
 
 const kanit = Kanit({
   variable: "--font-kanit",
@@ -55,23 +51,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="th"
       className={`${kanit.variable} ${plexThai.variable} h-full antialiased`}
     >
-      <head>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd()) }}
-        />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd()) }}
-        />
-      </head>
-      <body className="min-h-full flex flex-col font-body">
-        <LineModalProvider>
-          <SiteHeader />
-          <main className="flex-1">{children}</main>
-          <SiteFooter />
-        </LineModalProvider>
-      </body>
+      <body className="min-h-full flex flex-col font-body">{children}</body>
     </html>
   );
 }

@@ -1,7 +1,8 @@
-import { faqItems } from "@/lib/faq-data";
 import { ChevronDownIcon } from "../icons";
 
-export function FaqSection() {
+type FaqItem = { question: string; answer: string };
+
+export function FaqSection({ items: faqItems }: { items: FaqItem[] }) {
   return (
     <section id="faq" className="bg-bone py-20 sm:py-28">
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
