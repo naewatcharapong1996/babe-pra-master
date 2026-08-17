@@ -24,7 +24,14 @@ export function SiteContent({ content }: { content: Content }) {
       <HeroCarousel slides={content.hero.slides} />
 
       <Reveal>
-        <LifestyleBanner videoUrl={content.lifestyle_banner.videoUrl} imageUrl={content.lifestyle_banner.imageUrl} />
+        <LifestyleBanner
+          videoUrl={content.lifestyle_banner.videoUrl}
+          imageUrl={content.lifestyle_banner.imageUrl}
+          videoTitle={content.lifestyle_banner.videoTitle}
+          videoDescription={content.lifestyle_banner.videoDescription}
+          imageTitle={content.lifestyle_banner.imageTitle}
+          imageDescription={content.lifestyle_banner.imageDescription}
+        />
       </Reveal>
       <Reveal>
         <CampaignCta

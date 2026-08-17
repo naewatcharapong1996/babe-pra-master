@@ -17,7 +17,7 @@ export function AuthenticitySection({
   imageUrl: string;
 }) {
   return (
-    <section id="authenticity" className="bg-bone py-20 sm:py-28">
+    <section id="authenticity" className="bg-bone pb-20 pt-16 sm:pb-28">
       <div className="mx-auto grid max-w-6xl gap-12 px-4 sm:px-6 lg:grid-cols-2 lg:items-center lg:gap-16 lg:px-8">
         <div>
           <span className="text-sm font-semibold uppercase tracking-widest text-onyx/60">

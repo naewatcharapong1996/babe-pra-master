@@ -52,7 +52,11 @@ export const SECTION_FIELDS: Record<SectionKey, FieldDef[]> = {
 
   lifestyle_banner: [
     { kind: "media", key: "videoUrl", label: "วิดีโอ" },
-    { kind: "media", key: "imageUrl", label: "รูปภาพสำรอง (ถ้าวิดีโอเล่นไม่ได้)" },
+    { kind: "text", key: "videoTitle", label: "หัวข้อการ์ดวิดีโอ (ไม่บังคับ)", maxLength: 60 },
+    { kind: "textarea", key: "videoDescription", label: "คำอธิบายการ์ดวิดีโอ (ไม่บังคับ)", maxLength: 140, rows: 3 },
+    { kind: "media", key: "imageUrl", label: "รูปภาพ" },
+    { kind: "text", key: "imageTitle", label: "หัวข้อการ์ดรูปภาพ (ไม่บังคับ)", maxLength: 60 },
+    { kind: "textarea", key: "imageDescription", label: "คำอธิบายการ์ดรูปภาพ (ไม่บังคับ)", maxLength: 140, rows: 3 },
   ],
 
   campaign_cta: [
@@ -75,8 +79,13 @@ export const SECTION_FIELDS: Record<SectionKey, FieldDef[]> = {
       key: "bundles",
       label: "การ์ด (เพิ่มได้ไม่จำกัด)",
       itemFields: [
-        { kind: "text", key: "label", label: "ข้อความ", maxLength: 60 },
+        { kind: "text", key: "label", label: "หัวข้อการ์ด", maxLength: 60 },
         { kind: "text", key: "ctaLabel", label: "ข้อความปุ่ม", maxLength: 30 },
+        { kind: "textarea", key: "description", label: "คำอธิบายเพิ่มเติม (ไม่บังคับ)", maxLength: 140, rows: 3 },
+        { kind: "text", key: "tagLabel", label: "ป้ายมุมล่างซ้าย เช่น ดูวิดีโอ (ไม่บังคับ)", maxLength: 20 },
+        { kind: "text", key: "pinLabel", label: "ป้ายมุมบนขวา เช่น ด่วน (ไม่บังคับ)", maxLength: 12 },
+        { kind: "text", key: "footerName", label: "ชื่อผู้ดูแล (ไม่บังคับ)", maxLength: 40 },
+        { kind: "text", key: "footerMeta", label: "ข้อความท้ายการ์ด เช่น ตอบไว 5 นาที (ไม่บังคับ)", maxLength: 30 },
         { kind: "media", key: "imageUrl", label: "รูปภาพ" },
         { kind: "media", key: "videoUrl", label: "วิดีโอ (ไม่บังคับ)", optional: true },
       ],

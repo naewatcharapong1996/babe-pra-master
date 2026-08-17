@@ -32,6 +32,15 @@ export const sectionSchemas = {
   lifestyle_banner: z.object({
     videoUrl: mediaUrl,
     imageUrl: mediaUrl,
+    // Optional + defaulted: existing published/draft rows predate these
+    // fields, and section content is parsed with a hard `.parse()` at
+    // render time, so a required field here would break the live page.
+    // Video and image now render as two independent cards rather than one
+    // slot alternating with a fallback, so each gets its own copy.
+    videoTitle: z.string().max(60).optional().default(""),
+    videoDescription: z.string().max(140).optional().default(""),
+    imageTitle: z.string().max(60).optional().default(""),
+    imageDescription: z.string().max(140).optional().default(""),
   }),
 
   campaign_cta: z.object({
@@ -54,6 +63,14 @@ export const sectionSchemas = {
         z.object({
           label: z.string().min(1).max(60),
           ctaLabel: z.string().min(1).max(30),
+          // Optional + defaulted: existing published/draft rows predate these
+          // fields, and section content is parsed with a hard `.parse()` at
+          // render time, so a required field here would break the live page.
+          description: z.string().max(140).optional().default(""),
+          tagLabel: z.string().max(20).optional().default(""),
+          pinLabel: z.string().max(12).optional().default(""),
+          footerName: z.string().max(40).optional().default(""),
+          footerMeta: z.string().max(30).optional().default(""),
           imageUrl: mediaUrl,
           videoUrl: optionalMediaUrl,
         }),

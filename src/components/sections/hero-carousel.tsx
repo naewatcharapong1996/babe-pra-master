@@ -202,34 +202,39 @@ export function HeroCarousel({ slides }: { slides: Slide[] }) {
         {isDesktop ? (
           <div className="absolute inset-0 flex items-start justify-center px-8 pb-32 pt-16 xl:px-16">
             <div
-              className="relative h-full max-w-[85%] overflow-hidden rounded-3xl shadow-2xl ring-1 ring-bone/10"
+              // overflow-hidden must NOT live on this shadowed element — it
+              // would clip the element's own shadow/ring flush against the
+              // rounded edge. Clipping happens one level down instead.
+              className="relative h-full max-w-[85%] rounded-3xl shadow-2xl ring-1 ring-bone/10"
               style={{ aspectRatio: showVideoFallback ? VIDEO_FALLBACK_ASPECT : slide.aspect }}
             >
-              {slide.type === "video" && !showVideoFallback ? (
-                <video
-                  key={index}
-                  ref={videoRef}
-                  className="absolute inset-0 h-full w-full object-cover"
-                  muted
-                  playsInline
-                  preload="auto"
-                  autoPlay={!paused && !reducedMotion}
-                  onEnded={goToNext}
-                  onError={handleVideoError}
-                >
-                  <source src={slide.mediaUrl} type="video/webm" />
-                </video>
-              ) : (
-                <Image
-                  key={index}
-                  src={showVideoFallback ? VIDEO_FALLBACK_SRC : slide.mediaUrl}
-                  alt={showVideoFallback ? slide.eyebrow : (slide.alt ?? "")}
-                  fill
-                  sizes="85vw"
-                  className="object-cover"
-                  priority={index === 0}
-                />
-              )}
+              <div className="absolute inset-0 overflow-hidden rounded-3xl">
+                {slide.type === "video" && !showVideoFallback ? (
+                  <video
+                    key={index}
+                    ref={videoRef}
+                    className="absolute inset-0 h-full w-full object-cover"
+                    muted
+                    playsInline
+                    preload="auto"
+                    autoPlay={!paused && !reducedMotion}
+                    onEnded={goToNext}
+                    onError={handleVideoError}
+                  >
+                    <source src={slide.mediaUrl} type="video/webm" />
+                  </video>
+                ) : (
+                  <Image
+                    key={index}
+                    src={showVideoFallback ? VIDEO_FALLBACK_SRC : slide.mediaUrl}
+                    alt={showVideoFallback ? slide.eyebrow : (slide.alt ?? "")}
+                    fill
+                    sizes="85vw"
+                    className="object-cover"
+                    priority={index === 0}
+                  />
+                )}
+              </div>
             </div>
           </div>
         ) : slide.type === "video" && !showVideoFallback ? (
